@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My site</title>
+</head>
+<body>
+
+    <h2>My current locations</h2>
+    {%for location in locations%}
+    {{location}}
+    {%endfor%}
+    <h1> Location Form</h1>
+    <form action="/location/" method="post">
+    {%csrf_token%}
+    {{form}}
+    <input type="submit" value="Submit">
+</form>
+    <!-- | pipe operators -->
+    <!-- <form method="post" action="/location/add" style="display:flex;flex-direction:column ;gap:10px; max-width: 200px;" >
+        <label>The name of the location</label>
+        <input type="text" name="name"/>
+        <label>The max capacity of the location</label>
+        <input type="number" name="max_capacity"/>
+        <label>The address of the location</label>
+        <input type="text" name="address"/>
+        <input type="submit">Submit</input>
+    </form> -->
+    
+    </html>
