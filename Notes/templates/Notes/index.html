@@ -16,7 +16,8 @@
 
     <h2>Existing Notes are:</h2>
     {% for note in new_notes %}
-    <li>{{note}}</li>
+    <li>{{note}} by {{note.employee}}</li>
+    
     {%endfor%}
 
 </body>

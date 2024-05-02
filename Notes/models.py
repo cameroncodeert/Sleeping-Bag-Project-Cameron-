@@ -1,5 +1,6 @@
 from django.db import models
 from Participant.models import Participant
+from Employee.models import Employee
 # Create your models here.
 class Note(models.Model):
     #UserID
@@ -8,13 +9,16 @@ class Note(models.Model):
     # auto_now will update the date everytime the instance is saved (last_time_updated)
     date = models.DateField(auto_now_add=True)
     participant = models.ForeignKey(Participant,on_delete=models.SET_NULL, null=True)
-    #EmployeeID
+    employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True)
+    #EmployeeID foreigkey 
 
     def __str__(self):
-        # return self.note[:50]  #[] Return first 50 characters of the note
-        # TODO : REFACTOR  using f-string
-        # return f'A note about {self.particpatn.}
-        return  "A note about " + self.participant.full_name + " Created at " + str(self.date)
+        if self.participant:
+            return f"Bericht betreffend: {self.participant.full_name} Gemaakt op {self.date}"
+        else:
+            return "Bericht zonder gebruiker"
+
+        #return  "A note about " + self.participant.full_name + " Created at " + str(self.date)
 
 
 #notes = Notes.objects.all()
