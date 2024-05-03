@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maak een account</title>
+    <style>
+        .errorlist {color:red}
+    </style>
+</head>
+<body>
+    <h1>Registreer</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        {{employee_form.as_p}}
+        <button type="submit">Registreer</button>
+    </form>
+    {%if errors%}
+    
+    {{errors}}
+    {% endif %}
+    <a href="{% url 'login' %}">Heeft u al een account?
+        Dan kunt u hier inloggen.</a>
+</body>
+</html>

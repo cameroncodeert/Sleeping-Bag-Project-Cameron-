@@ -1,12 +1,18 @@
 import datetime
 from django.shortcuts import render
-from django import forms
+#from django import forms
 from .models import Location
+from django.forms import ModelForm
 
-class LocationForm(forms.Form):
-    name = forms.CharField(label='The name of the location', max_length=250)
-    address = forms.CharField(label='The address of the location', max_length=250)
-    max_capacity = forms.IntegerField(label='The max capacity of the location')
+# class LocationForm(forms.Form):
+#     name = forms.CharField(label='The name of the location', max_length=250)
+#     address = forms.CharField(label='The address of the location', max_length=250)
+#     max_capacity = forms.IntegerField(label='The max capacity of the location')
+
+class LocationForm(ModelForm):
+    class Meta:
+        model = Location
+        fields = ['name', 'address', 'max_capacity']
 
 # class NoteForm(ModelForm):
 #     class Meta:
@@ -17,7 +23,7 @@ class LocationForm(forms.Form):
 # view function
 #/location/3
 #/location/;DROP DATABASE;
-def hello(request):
+def manageLocation(request):
     if request.method== "POST":
         form = LocationForm(request.POST)
         if form.is_valid():

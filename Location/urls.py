@@ -1,6 +1,6 @@
 from django.urls import path
 # from . import views
-from .views import hello
+from .views import manageLocation
 # urlpatterns = [
 #     #/location
 #     path('', hello)
@@ -11,5 +11,5 @@ from .views import hello
 # from .views import hello  # Make sure to import the hello view
 
 urlpatterns = [
-    path('', hello, name='hello'),  # Maps /hello/ to the hello view
+    path('', manageLocation, name='manageLocation'),  # Maps /hello/ to the hello view
 ]

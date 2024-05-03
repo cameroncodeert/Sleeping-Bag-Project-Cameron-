@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maak een account</title>
+</head>
+<body>
+    <h1>Registreer</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Registreer</button>
+    </form>
+    <a href="{% url 'login' %}">Heeft u al een account?
+        Dan kunt u hier inloggen.</a>
+</body>
+</html>

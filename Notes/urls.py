@@ -1,7 +1,6 @@
 from django.urls import path
-
-from .views import helloNote 
+from .views import manage_note
 
 urlpatterns = [
-    path('', helloNote, name='helloNote'),
+    path('', manage_note, name='manageNote'),
 ]

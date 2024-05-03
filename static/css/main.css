@@ -1,0 +1,23 @@
+.navbar
+ {
+    background-color: #d6d6d6;
+}
+
+.navbar-item{
+    color: black;
+}
+.navbar-item:hover{
+    background-color: #363636;
+    color:white;
+}
+h1{
+    color:red;
+}
+/* General body styles */
+body {
+    color: #e8231a;
+    height: 100vh;
+}
+header{
+    background-color: #ffffff;
+}
