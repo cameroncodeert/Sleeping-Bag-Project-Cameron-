@@ -18,12 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 # from django.contrib.auth.views import LoginView
 from .views import landing_page, login_user, register_user, logout_user
+from Participant.views import dashboard_view, participant_detail
 from django.contrib.auth import views as auth_views
 
     
 
 urlpatterns = [
-    path('', landing_page, name="landing_page"),
+    path('', dashboard_view, name="landing_page"),
+    path('participant/<int:id>/', participant_detail, name='participant_detail'),
     path('admin/', admin.site.urls),
     path('location/', include("Location.urls")),
     path('note/', include("Notes.urls")),

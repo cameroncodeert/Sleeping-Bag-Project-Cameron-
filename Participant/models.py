@@ -15,15 +15,4 @@ class Participant(models.Model):
 
     def __str__(self):
         return self.full_name
-    # def save(self, *args, **kwargs):
-    #     self.full_name = self.first_name + " " + self.last_name
-    #     super().save(*args, **kwargs)
-#  participatn = Particpant(first_name='kevin', last_name="morivllier")
-#  participatn.save()
-#  participatn.full_name
-#  kevin morvillier
-# participant is an record (instance)
-# participant.registed_location => id of the location
-# location = Location.objects.get(id= participant.registered_location)
-# location.max_capacity
-# participant.registered_location.adress => instance of the location 
+   

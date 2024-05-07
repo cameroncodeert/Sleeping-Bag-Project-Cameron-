@@ -13,11 +13,66 @@
 h1{
     color:red;
 }
-/* General body styles */
+/* General body style */
 body {
     color: #e8231a;
     height: 100vh;
+    background-color: #5b5b5b;
+    font-family: 'Arial', sans-serif;
 }
 header{
     background-color: #ffffff;
+}
+.columns {
+    margin: 20px;
+}
+
+.card {
+    background-color: #252121;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.card-header {
+    background-color: #4a4a4a; /* Darker header for contrast */
+    color: #000000;
+}
+
+.card-header-title {
+    font-size: 1.2em; /* Larger font for headers */
+}
+
+.card-content {
+    padding: 20px;
+}
+
+ul {
+    padding-left: 20px; /* Proper padding for lists */
+    list-style-type: none; /* Removing bullets */
+}
+
+li {
+    padding: 5px 0; /* Spacing between list items */
+}
+
+/* Specific to notes section for better visualization */
+.notes-card {
+    background-color: #dcdcdc; /* Light gray background for notes */
+    border-left: 5px solid #3273dc; /* Blue accent on the left */
+}
+
+
+.participants-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.participant-card {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 300px; 
+    color: inherit; 
 }

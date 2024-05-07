@@ -37,11 +37,13 @@ def manage_note(request):
     # filter new_notes to only return notes WITH a participant AND that are from the user location
     new_notes = Note.objects.filter(participant__isnull=False)
     new_notes = new_notes.filter(participant__registered_location= employee.location)
+    
+    #reversed list
+    display_notes = list(new_notes)[::-1]
 
     #new_notes= Note.objects.exclude(participant__is_null)True)
-    print(new_notes)
     form = NoteForm()
-    context = {"new_notes": new_notes, 'form':form}
+    context = {"new_notes": display_notes, 'form':form}
     return render(request, "Notes/index.html", context)
 
 

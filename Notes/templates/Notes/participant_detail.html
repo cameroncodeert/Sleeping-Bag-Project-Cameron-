@@ -1,0 +1,60 @@
+{% extends 'Notes/base.html' %}
+
+{% block body %}
+{% include "Notes/header.html" %}
+
+<div class="columns">
+    <!-- Participant Contact Info -->
+    <div class="column is-one-third">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    Contact: {{ participant.full_name }}
+                </p>
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    <strong>Location:</strong> {{ participant.registered_location.name }}<br>
+                    <strong>Date of Birth:</strong> {{ participant.date_of_birth|date:"Y-m-d" }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sleeping Bags Status -->
+    <div class="column">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    Sleeping Bags
+                </p>
+            </header>
+            <div class="card-content">
+                <ul>
+                    {% for bag in sleeping_bags %}
+                    <li><strong>Status:</strong> {{ bag.status }}, <strong>Last Washed:</strong> {{ bag.last_washing_cycle }}</li>
+                    {% empty %}
+                    <li>No sleeping bags found.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="column is-full">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                    Notes
+                </p>
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    <!-- Placeholder for dynamic notes -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

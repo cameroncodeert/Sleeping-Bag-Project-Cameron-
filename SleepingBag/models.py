@@ -1,5 +1,7 @@
 from django.db import models
 from Location.models import Location
+from Participant.models import Participant
+
 # Create your models here.
 # enumeration how it looks, how it saved or used by a dev
 class StatusChoice(models.TextChoices):
@@ -17,6 +19,8 @@ class SleepingBags(models.Model):
     # models.ManyToManyField
     is_in_facility = models.BooleanField(default=True)
     last_washing_cycle = models.DateField(auto_now=True)
+    linked_participant = models.ForeignKey(Participant, on_delete=models.SET_NULL, null=True, blank=True) 
+
 
 
 

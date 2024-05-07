@@ -4,6 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notes</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+    {% include "Notes/header.html" %}
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Notes</h1>
+            <h2 class="subtitle">Add a New Note</h2>
+            <form method="post" action="{% url 'manageNote' %}">
+                {% csrf_token %}
+                <div class="field">
+                    <label class="label">Note</label>
+                    <div class="control">
+                        {{ form.note }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Participant</label>
+                    <div class="control">
+                        {{ form.participant }}
+                    </div>
+                </div>
+                <div class="control">
+                    <button class="button is-link" type="submit">Submit</button>
+                </div>
+            </form>
+
+            <h2 class="subtitle">Existing Notes are:</h2>
+            <div class="content">
+                <ul>
+                {% for note in new_notes %}
+                    <li>{{ note.note }} by: {{ note.employee }} - gemaakt op {{ note.date|date:"F d, Y" }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes</title>
     {}
 </head>
 <body>
@@ -23,4 +70,4 @@
     {%endfor%}
 
 </body>
-</html>
+</html> -->

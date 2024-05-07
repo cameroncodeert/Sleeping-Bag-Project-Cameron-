@@ -6,7 +6,7 @@ from Location.models import Location
 
 class Employee(models.Model):
     position = models.CharField(max_length=250, verbose_name="Rol medewerker")
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE) #, related_name='employee')
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True) 
 
     def __str__(self):

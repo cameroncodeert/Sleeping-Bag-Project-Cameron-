@@ -1,9 +1,32 @@
-{% extends 'Notes/base.html'%}
-    {%block head%}
-        <title>Uw Dashboard</title>
-    {%endblock%}
+{% extends 'Notes/base.html' %}
 
-{% block body%}
-    {% include "Notes/header.html"%} 
-    <h1>Welkom</h1>
-{%endblock%}
+{% block head %}
+<title>Uw Dashboard</title>
+{% endblock %}
+
+{% block body %}
+{% include "Notes/header.html" %}
+<section class="section">
+    <div class="container">
+        <h1 class="title">Welkom, {{ employee.user.first_name }}!</h1>
+        <p class="subtitle">Hier zijn de deelnemers bij uw locatie: {{ employee.location.name }}</p>
+        <div class="participants-grid">
+            {% for data in participant_data %}
+            <div class="participant-card">
+                <a href="{% url 'participant_detail' data.participant.id %}">
+
+                    <h3>{{ data.participant.full_name }} - Geboren op: {{ data.participant.date_of_birth|date:"Y-m-d" }}</h3>
+                     <ul>
+                {% for bag in data.sleeping_bags %}
+                    <li>Slaapzak Status: {{ bag.status }}, Laatst gewassen: {{ bag.last_washing_cycle|date:"Y-m-d" }}</li>
+                {% empty %}
+                    <li>Geen slaapzakken gevonden voor deze deelnemer.</li>
+                {% endfor %}
+            </ul>
+        </a>
+    </div>
+{% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
