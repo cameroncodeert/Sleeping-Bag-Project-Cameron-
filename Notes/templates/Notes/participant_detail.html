@@ -1,60 +1,122 @@
 {% extends 'Notes/base.html' %}
 
+{% load static %}
+
 {% block body %}
 {% include "Notes/header.html" %}
 
 <div class="columns">
-    <!-- Participant Contact Info -->
+    <!-- Cliënt Contact Info -->
     <div class="column is-one-third">
         <div class="card">
             <header class="card-header">
                 <p class="card-header-title">
-                    Contact: {{ participant.full_name }}
+                    Cliënt: {{ participant.full_name }}
                 </p>
             </header>
             <div class="card-content">
                 <div class="content">
-                    <strong>Location:</strong> {{ participant.registered_location.name }}<br>
-                    <strong>Date of Birth:</strong> {{ participant.date_of_birth|date:"Y-m-d" }}
+                    <strong>Locatie::</strong> {{ participant.registered_location.name }}<br>
+                    <strong>Geboortedatum:</strong> {{ participant.date_of_birth|date:"Y-m-d" }}
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Sleeping Bags Status -->
+    <!-- Status vd Slaapzakken -->
     <div class="column">
         <div class="card">
             <header class="card-header">
                 <p class="card-header-title">
-                    Sleeping Bags
+                    Slaapzakken
                 </p>
             </header>
             <div class="card-content">
                 <ul>
                     {% for bag in sleeping_bags %}
-                    <li><strong>Status:</strong> {{ bag.status }}, <strong>Last Washed:</strong> {{ bag.last_washing_cycle }}</li>
+                    <li>
+                        <strong>Slaapzak nummer:</strong> {{ bag.id }},
+                        <strong>Status:</strong> {{ bag.status }},
+                        <strong>Laatst Gewassen:</strong> {{ bag.last_washing_cycle }},
+                        <strong>Gewassen:</strong> 
+                        {% if bag.is_in_facility %}
+                        {% if not bag.is_washed %}
+                            <span style="color:red;">✘ Moet gewassen worden</span> 
+                        {% else %}
+                            <span style="color:green;">✔ Gewassen</span> 
+                        {% endif %}
+                        {% else %}
+                        <span style="color:orange;">✘ Moet gewassen worden na terugkomst</span> 
+                        {% endif %},
+                        <strong>Locatie:</strong> 
+                        {% if bag.is_in_facility %}
+                            <i class="fa-solid fa-house"></i> Op locatie
+                        {% else %}
+                            <i class="fa-solid fa-person-walking"></i> Met de gebruiker
+                        {% endif %}
+                </li>
+                    </li>
                     {% empty %}
-                    <li>No sleeping bags found.</li>
+                    <li>Geen slaapzakken gevonden.</li>
                     {% endfor %}
                 </ul>
+                <!-- ruilen knop-->
+                <a href="javascript:void(0);" class="btn btn-primary swap-button" data-participant-id="{{ participant.id }}">Slaapzakken omruilen</a>
             </div>
         </div>
     </div>
 
-    <!-- Notes -->
+    <!-- Notities (nog te veranderen)-->
     <div class="column is-full">
         <div class="card">
             <header class="card-header">
                 <p class="card-header-title">
-                    Notes
+                    Notities
                 </p>
             </header>
             <div class="card-content">
                 <div class="content">
-                    <!-- Placeholder for dynamic notes -->
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- terug naar deelnemers knop -->
+<div class="section">
+    <div class="container">
+        <a href="{% url 'landing_page' %}" class="return-button">Terug naar alle deelnemers</a>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.swap-button').click(function() {
+        var participantId = $(this).data('participant-id');
+        var ajaxUrl = `{% url 'swap_bag' 0 %}`.replace('0', participantId);
+
+        $.ajax({
+            url: ajaxUrl,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert('Ruilen Succesvol!: ' + response.message);
+                } else {
+                    alert('Ruilen mislukt: ' + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Technical error: ' + error);
+            }
+        });
+    });
+});
+
+
+</script>
+
+
 {% endblock %}

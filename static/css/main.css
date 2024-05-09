@@ -19,13 +19,28 @@ body {
     height: 100vh;
     background-color: #5b5b5b;
     font-family: 'Arial', sans-serif;
+    width: 100%;
+    max-width: 100%;  /* Ensures that the html and body tags do not extend beyond viewport */
+    overflow-x: hidden;  /* Prevents horizontal scrolling at the root level */
 }
 header{
     background-color: #ffffff;
 }
 .columns {
     margin: 20px;
+    display: flex; 
+    flex-wrap: wrap;
+    overflow-x: hidden;
+    justify-content: center;  /* Centers columns for better alignment and to avoid overflow */
+    width: calc(100% - 40px);  /* Adjusts width taking margin into account */
 }
+
+.column {
+    flex: 1;  /* this allow each column to grow and fill the space evenly */
+    padding: 10px;
+    box-sizing: border-box;  /* Includes padding and border in the element's total width */
+}
+
 
 .card {
     background-color: #252121;
@@ -43,6 +58,9 @@ header{
 
 .card-content {
     padding: 20px;
+    overflow-y: auto;
+    max-height: 300px;  /* Optionally set a max height for cards */
+
 }
 
 ul {
@@ -54,11 +72,6 @@ li {
     padding: 5px 0; /* Spacing between list items */
 }
 
-/* Specific to notes section for better visualization */
-.notes-card {
-    background-color: #dcdcdc; /* Light gray background for notes */
-    border-left: 5px solid #3273dc; /* Blue accent on the left */
-}
 
 
 .participants-grid {
@@ -75,4 +88,22 @@ li {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     width: 300px; 
     color: inherit; 
+}
+
+/* Return button */
+.return-button {
+    display: block; 
+    width: auto;    
+    margin: 20px auto;  
+    padding: 10px 20px; 
+    background-color: #4a4a4a;  
+    color: white;   
+    text-align: center;     
+    border-radius: 5px; 
+    text-decoration: none;  
+    font-weight: bold; 
+}
+
+.return-button:hover {
+    background-color: #363636; /*  background when i hover */
 }

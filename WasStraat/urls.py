@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 # from django.contrib.auth.views import LoginView
 from .views import landing_page, login_user, register_user, logout_user
+from SleepingBag.views import swap_sleeping_bag, success_view
 from Participant.views import dashboard_view, participant_detail
 from django.contrib.auth import views as auth_views
 
@@ -26,6 +27,8 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('', dashboard_view, name="landing_page"),
     path('participant/<int:id>/', participant_detail, name='participant_detail'),
+    path('swap_bag/<int:participant_id>/', swap_sleeping_bag, name='swap_bag'),
+    path('success/', success_view, name='success'),
     path('admin/', admin.site.urls),
     path('location/', include("Location.urls")),
     path('note/', include("Notes.urls")),
