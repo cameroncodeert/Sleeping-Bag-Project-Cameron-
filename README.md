@@ -1,4 +1,5 @@
 # Improvements
+# Wat moet er nog gebeuren? To do hieronder
 ## Notes
 ### views.py
 - could be interesting to only return notes from the location of the login employee (not yet possible need to create the employee table first)

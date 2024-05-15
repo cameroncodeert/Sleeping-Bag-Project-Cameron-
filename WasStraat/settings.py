@@ -61,7 +61,7 @@ ROOT_URLCONF = 'WasStraat.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'Notes', 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'Notes', 'templates', 'Notes')],
         #'DIRS': [os.path.join(BASE_DIR, 'template')],
         'APP_DIRS': True,
         'OPTIONS': {

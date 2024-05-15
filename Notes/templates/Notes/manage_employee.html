@@ -1,0 +1,19 @@
+{% extends 'Notes/base.html' %}
+
+{% block head %}
+<title>Manage Employee</title>
+{% endblock %}
+
+{% block body %}
+{% include "Notes/header.html" %}
+<section class="section">
+    <div class="container">
+        <h2>Manage Employee</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Employee</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

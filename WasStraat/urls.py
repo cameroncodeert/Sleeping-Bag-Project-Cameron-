@@ -21,12 +21,16 @@ from .views import landing_page, login_user, register_user, logout_user
 from SleepingBag.views import swap_sleeping_bag, success_view
 from Participant.views import dashboard_view, participant_detail
 from django.contrib.auth import views as auth_views
+from Employee.views import add_participant, remove_participant, manageEmployee, dashboard_view, participant_detail
 
     
 
 urlpatterns = [
     path('', dashboard_view, name="landing_page"),
+    path('add_participant/', add_participant, name='add_participant'),
     path('participant/<int:id>/', participant_detail, name='participant_detail'),
+    path('remove_participant/<int:participant_id>/', remove_participant, name='remove_participant'),
+    path('manage_employee/', manageEmployee, name='manage_employee'),
     path('swap_bag/<int:participant_id>/', swap_sleeping_bag, name='swap_bag'),
     path('success/', success_view, name='success'),
     path('admin/', admin.site.urls),

@@ -1,0 +1,19 @@
+{% extends 'Notes/base.html' %}
+
+{% block head %}
+<title>Voeg Deelnemer Toe</title>
+{% endblock %}
+
+{% block body %}
+{% include "Notes/header.html" %}
+<section class="section">
+    <div class="container">
+        <h2>Voeg Deelnemer Toe</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="button is-primary">Voeg Deelnemer Toe</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
