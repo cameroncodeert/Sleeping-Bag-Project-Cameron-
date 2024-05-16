@@ -23,7 +23,7 @@ class Employee(models.Model):
 
     # A string representation for Employee
     def __str__(self):
-        return f"{self.user.first_name} - {self.position}"
+        return f"{self.user.first_name} {self.user.last_name} - {self.position}"
     
     def save(self, *args, **kwargs):
         if self.position == 'Beheerder' and not self.can_manage_participants:

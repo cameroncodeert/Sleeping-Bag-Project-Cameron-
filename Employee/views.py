@@ -57,30 +57,14 @@ def participant_detail(request, id):
     })
 
 
-#functionality to add or remove participants as Beheerder
-@login_required
-def add_participant(request):
-    if not request.user.employee.can_manage_participants:
-        return redirect('landing_page')
+# @login_required
+# def remove_participant(request, participant_id):
+#     if not request.user.employee.can_manage_participants:
+#         return redirect('landing_page')
 
-    if request.method == 'POST':
-        form = ParticipantForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('landing_page')
-    else:
-        form = ParticipantForm()
-
-    return render(request, 'add_participant.html', {'form': form})
-
-@login_required
-def remove_participant(request, participant_id):
-    if not request.user.employee.can_manage_participants:
-        return redirect('landing_page')
-
-    participant = get_object_or_404(Participant, id=participant_id)
-    participant.delete()
-    return redirect('landing_page')
+#     participant = get_object_or_404(Participant, id=participant_id)
+#     participant.delete()
+#     return redirect('landing_page')
     
 
 

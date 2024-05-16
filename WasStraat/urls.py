@@ -21,7 +21,8 @@ from .views import landing_page, login_user, register_user, logout_user
 from SleepingBag.views import swap_sleeping_bag, success_view
 from Participant.views import dashboard_view, participant_detail
 from django.contrib.auth import views as auth_views
-from Employee.views import add_participant, remove_participant, manageEmployee, dashboard_view, participant_detail
+from Employee.views import manageEmployee, dashboard_view, participant_detail
+from Participant.views import add_participant, remove_participant
 
     
 

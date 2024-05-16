@@ -27,7 +27,7 @@ def login_user(request):
 
             login(request, user)
         # Redirect to a success page.
-        return redirect('/note')
+        return redirect('/')
     else:
         return render(request, "Notes/login.html")
 

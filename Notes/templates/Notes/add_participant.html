@@ -2,18 +2,45 @@
 
 {% block head %}
 <title>Voeg Deelnemer Toe</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock %}
 
 {% block body %}
 {% include "Notes/header.html" %}
 <section class="section">
     <div class="container">
-        <h2>Voeg Deelnemer Toe</h2>
-        <form method="post">
+        <h3 class="title is-4">Deelnemer Toevoegen</h3>
+        <form method="post" class="box">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="button is-primary">Voeg Deelnemer Toe</button>
         </form>
+        <!-- Display available sleeping bags -->
+        <h3 class="title is-4">Beschikbare Slaapzakken</h3>
+        <div class="box">
+        <ul>
+            {% for bag in available_sleeping_bags %}
+                <li>
+                    Status: {{ bag.status }}, 
+                    Laatste wasbeurt: {{ bag.last_washing_cycle|date:"Y-m-d" }},
+                    In faciliteit: {{ bag.is_in_facility }},
+                    Locatie: {{ bag.location.name }}
+                </li>
+            {% empty %}
+                <li>Geen beschikbare slaapzakken.</li>
+            {% endfor %}
+        </ul>
     </div>
 </section>
+
+<!-- Include Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize Flatpickr on the date input field
+        flatpickr(".datepicker", {
+            dateFormat: "Y-m-d",
+        });
+    });
+</script>
 {% endblock %}
