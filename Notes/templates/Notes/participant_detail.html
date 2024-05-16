@@ -54,6 +54,9 @@
                         {% else %}
                             <i class="fa-solid fa-person-walking"></i> Met de gebruiker
                         {% endif %}
+                        <!-- Kwijt knop -->
+                        <a href="javascript:void(0);" class="btn btn-danger report-lost-button" data-bag-id="{{ bag.id }}">Verloren melden</a>
+
                 </li>
                     </li>
                     {% empty %}
@@ -62,6 +65,8 @@
                 </ul>
                 <!-- ruilen knop-->
                 <a href="javascript:void(0);" class="btn btn-primary swap-button" data-participant-id="{{ participant.id }}">Slaapzakken omruilen</a>
+                <!-- kwijt knop -->
+
             </div>
         </div>
     </div>
@@ -115,8 +120,53 @@ $(document).ready(function() {
     });
 });
 
+$('.report-lost-button').click(function() {
+        var bagId = $(this).data('bag-id');
+        var ajaxUrl = `{% url 'report_lost_bag' 0 %}`.replace('0', bagId);
+
+        $.ajax({
+            url: ajaxUrl,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert('Melding Succesvol!: ' + response.message);
+                    location.reload(); // Refresh the page to reflect changes
+                } else {
+                    alert('Melding mislukt: ' + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Technical error: ' + error);
+            }
+        });
+    });
+
+</script>
+
 
 </script>
 
 
 {% endblock %}
+<!-- 
+$('.return-dirty-button').click(function() {
+    var participantId = $(this).data('participant-id');
+    var ajaxUrl = `{% url 'return_dirty_bag' 0 %}`.replace('0', participantId);
+
+    $.ajax({
+        url: ajaxUrl,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                alert('Terugbrengen Succesvol!: ' + response.message);
+            } else {
+                alert('Terugbrengen mislukt: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('Technical error: ' + error);
+        }
+    });
+}); -->

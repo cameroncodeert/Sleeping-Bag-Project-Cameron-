@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 # from django.contrib.auth.views import LoginView
 from .views import landing_page, login_user, register_user, logout_user
-from SleepingBag.views import swap_sleeping_bag, success_view
+from SleepingBag.views import swap_sleeping_bag, success_view, report_lost_bag #return_dirty_bag
 from Participant.views import dashboard_view, participant_detail
 from django.contrib.auth import views as auth_views
 from Employee.views import manageEmployee, dashboard_view, participant_detail
@@ -33,6 +33,8 @@ urlpatterns = [
     path('remove_participant/<int:participant_id>/', remove_participant, name='remove_participant'),
     path('manage_employee/', manageEmployee, name='manage_employee'),
     path('swap_bag/<int:participant_id>/', swap_sleeping_bag, name='swap_bag'),
+    path('report_lost_bag/<int:bag_id>/', report_lost_bag, name='report_lost_bag'),
+   # path('return_dirty_bag/<int:participant_id>/', views.return_dirty_bag, name='return_dirty_bag'),
     path('success/', success_view, name='success'),
     path('admin/', admin.site.urls),
     path('location/', include("Location.urls")),

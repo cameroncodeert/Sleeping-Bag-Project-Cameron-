@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 
-from .models import SleepingBags, Participant
+from .models import SleepingBags, Participant, StatusChoice
 # Create your views here.
 # user stories
 # Cameron is an admin and has access ot the dashboard
@@ -61,3 +61,39 @@ def success_view(request):
     # Here you could render a template or just return a simple HttpResponse
     return HttpResponse("Swap successful!")
 
+logger = logging.getLogger(__name__)
+
+def report_lost_bag(request, bag_id):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        try:
+            bag_to_report = get_object_or_404(SleepingBags, pk=bag_id)
+            
+            if bag_to_report.status == StatusChoice.LOST:
+                return JsonResponse({"success": False, "message": "This bag is already reported as lost."})
+            
+            bag_to_report.status = StatusChoice.LOST
+            bag_to_report.save()
+            return JsonResponse({"success": True, "message": "The bag has been reported lost."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)})
+    return HttpResponse("This endpoint requires an AJAX request.", status=400)
+
+# def return_dirty_bag(request, participant_id):
+#     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+#         try:
+#             participant = get_object_or_404(Participant, pk=participant_id)
+#             dirty_bag = SleepingBags.objects.filter(linked_participant=participant, is_in_facility=False).first()
+
+#             if dirty_bag:
+#                 dirty_bag.is_in_facility = True
+#                 dirty_bag.is_washed = False
+#                 dirty_bag.save()
+#                 return JsonResponse({"success": True, "message": "The dirty bag has been returned for washing."})
+#             else:
+#                 return JsonResponse({"success": False, "message": "No dirty bags found to return."})
+#         except Exception as e:
+#             return JsonResponse({"success": False, "message": str(e)})
+#     return HttpResponse("This endpoint requires an AJAX request.", status=400)
+
+# def success_view(request):
+#     return HttpResponse("Action successful!")
