@@ -6,6 +6,9 @@ from .forms import ParticipantForm
 from Employee.models import Employee
 from django.contrib.auth.models import User
 from Location.models import Location
+from Notes.models import Note
+from django.forms import ModelForm
+
 
 # Create your views here.
 
@@ -30,19 +33,36 @@ def dashboard_view(request):
     }
     return render(request, 'Notes/landing_page.html', context)
 
+class NoteForm(ModelForm):
+    class Meta:
+        model = Note
+        fields = ["note","participant"]
+
 @login_required
 def participant_detail(request, id):
     participant = get_object_or_404(Participant, pk=id)
     sleeping_bags = SleepingBags.objects.filter(linked_participant=participant)
+    status_choices = SleepingBags._meta.get_field('status').choices
 
-     # debug
-    print("Participant: ", participant.full_name)
-    print("DOB: ", participant.date_of_birth)
-    print("Sleeping Bags: ", list(sleeping_bags.values()))
+    
+    employee = request.user.employee
+    if request.method == 'POST':
+        form = NoteForm(request.POST)
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.employee = employee
+            note.save()
+    
+    form = NoteForm()
+    new_notes = Note.objects.filter(participant=participant)
+
 
     return render(request, 'Notes/participant_detail.html', {
         'participant': participant,
-        'sleeping_bags': sleeping_bags
+        'sleeping_bags': sleeping_bags,
+        'status_choices': status_choices, 
+        'form': form,
+        'new_notes': new_notes
     })
 
 

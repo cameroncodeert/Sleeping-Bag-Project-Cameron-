@@ -97,3 +97,42 @@ def report_lost_bag(request, bag_id):
 
 # def success_view(request):
 #     return HttpResponse("Action successful!")
+
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse, HttpResponse
+from .models import SleepingBags, Participant, StatusChoice
+from django.utils import timezone
+import logging
+
+logger = logging.getLogger(__name__)
+
+def wash_now(request, bag_id):
+    if request.method == 'POST':
+        try:
+            bag_to_wash = get_object_or_404(SleepingBags, pk=bag_id)
+            bag_to_wash.is_washed = True
+            bag_to_wash.last_washing_cycle = timezone.now().date()
+            bag_to_wash.save()
+            return JsonResponse({"success": True, "message": "The bag has been washed."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)})
+    return HttpResponse("This endpoint requires a POST request.", status=400)
+
+
+def update_bag(request, bag_id):
+    if request.method == 'POST':
+        try:
+            bag_to_update = get_object_or_404(SleepingBags, pk=bag_id)
+            status = request.POST.get('status')
+            is_washed = request.POST.get('is_washed') == 'true'
+            is_in_facility = request.POST.get('is_in_facility') == 'true'
+            
+            bag_to_update.status = status
+            bag_to_update.is_washed = is_washed
+            bag_to_update.is_in_facility = is_in_facility
+            bag_to_update.save()
+            
+            return redirect('participant_detail', id=bag_to_update.linked_participant.id)
+        except Exception as e:
+            return HttpResponse(str(e), status=400)
+    return HttpResponse("This endpoint requires a POST request.", status=400)

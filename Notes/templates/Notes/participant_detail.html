@@ -1,7 +1,5 @@
 {% extends 'Notes/base.html' %}
-
 {% load static %}
-
 {% block body %}
 {% include "Notes/header.html" %}
 
@@ -34,58 +32,87 @@
             <div class="card-content">
                 <ul>
                     {% for bag in sleeping_bags %}
-                    <li>
-                        <strong>Slaapzak nummer:</strong> {{ bag.id }},
-                        <strong>Status:</strong> {{ bag.status }},
-                        <strong>Laatst Gewassen:</strong> {{ bag.last_washing_cycle }},
-                        <strong>Gewassen:</strong> 
-                        {% if bag.is_in_facility %}
-                        {% if not bag.is_washed %}
-                            <span style="color:red;">✘ Moet gewassen worden</span> 
-                        {% else %}
-                            <span style="color:green;">✔ Gewassen</span> 
-                        {% endif %}
-                        {% else %}
-                        <span style="color:orange;"> Moet gewassen worden na terugkomst</span> 
-                        {% endif %},
-                        <strong>Locatie:</strong> 
-                        {% if bag.is_in_facility %}
-                            <i class="fa-solid fa-house"></i> Op locatie
-                        {% else %}
-                            <i class="fa-solid fa-person-walking"></i> Met de gebruiker
-                        {% endif %}
-                        <!-- Kwijt knop -->
-                        <a href="javascript:void(0);" class="btn btn-danger report-lost-button" data-bag-id="{{ bag.id }}">Verloren melden</a>
+                    <form method="POST" action="{% url 'update_bag' bag.id %}">
+                        {% csrf_token %}
+                        <li>
+                            <strong>Slaapzak nummer:</strong> {{ bag.id }},
+                            <strong>Status:</strong>
+                            <select name="status">
+                                {% for choice in status_choices %}
+                                <option value="{{ choice.0 }}" {% if bag.status == choice.0 %} selected {% endif %}>{{ choice.1 }}</option>
+                            {% endfor %}
+                            </select>
+                            <button type="submit">Save</button>
+                            </form>
+                            
+                            <strong>Laatst Gewassen:</strong>
+                            <span>{{ bag.last_washing_cycle }}</span>
+                            <button type="button" class="btn btn-primary wash-now-button" data-bag-id="{{ bag.id }}">Was nu</button>,
 
-                </li>
-                    </li>
+                            <strong>Gewassen:</strong>
+                            <select name="is_washed">
+                                <option value="true" {% if bag.is_washed %}selected{% endif %}>✔ Gewassen</option>
+                                <option value="false" {% if not bag.is_washed %}selected{% endif %}>✘ Moet gewassen worden</option>
+                            </select>,
+
+                            <strong>Locatie:</strong>
+                            <select name="is_in_facility">
+                                <option value="true" {% if bag.is_in_facility %}selected{% endif %}>Op locatie</option>
+                                <option value="false" {% if not bag.is_in_facility %}selected{% endif %}>Met de gebruiker</option>
+                            </select>
+                            
+                            <!-- Report Lost Button -->
+                            <a href="javascript:void(0);" class="btn btn-danger report-lost-button" data-bag-id="{{ bag.id }}">Verloren melden</a>
+                        </li>
+                    </form>
                     {% empty %}
                     <li>Geen slaapzakken gevonden.</li>
                     {% endfor %}
                 </ul>
-                <!-- ruilen knop-->
+                <!-- Swap Button -->
                 <a href="javascript:void(0);" class="btn btn-primary swap-button" data-participant-id="{{ participant.id }}">Slaapzakken omruilen</a>
-                <!-- kwijt knop -->
-
             </div>
         </div>
     </div>
+<!-- Notities -->
+<div class="column is-full">
+    <div class="card">
+        <header class="card-header">
+            <p class="card-header-title">
+                Notities
+            </p>
+        </header>
+        <div class="card-content">
+            <div class="content">
+                <form method="post" action="{% url 'participant_detail' participant.id %}">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label class="label">Note</label>
+                        <div class="control">
+                            <textarea name="note" rows="4" class="textarea">{{ form.note.value }}</textarea>
+                        </div>
+                    </div>
+                    <div class="field">
+                        {{ form.participant.as_hidden }}  <!-- Hide the participant field -->
+                    </div>
+                    <div class="control">
+                        <button class="button is-link" type="submit">Submit</button>
+                    </div>
+                </form>
 
-    <!-- Notities (nog te veranderen)-->
-    <div class="column is-full">
-        <div class="card">
-            <header class="card-header">
-                <p class="card-header-title">
-                    Notities
-                </p>
-            </header>
-            <div class="card-content">
+                <h2 class="subtitle">Existing Notes are:</h2>
                 <div class="content">
+                    <ul>
+                        {% for note in new_notes %}
+                            <li>{{ note.note }} by: {{ note.employee }} - gemaakt op {{ note.date|date:"F d, Y" }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- terug naar deelnemers knop -->
 <div class="section">
@@ -95,7 +122,6 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 $(document).ready(function() {
     $('.swap-button').click(function() {
@@ -118,9 +144,8 @@ $(document).ready(function() {
             }
         });
     });
-});
 
-$('.report-lost-button').click(function() {
+    $('.report-lost-button').click(function() {
         var bagId = $(this).data('bag-id');
         var ajaxUrl = `{% url 'report_lost_bag' 0 %}`.replace('0', bagId);
 
@@ -142,13 +167,35 @@ $('.report-lost-button').click(function() {
         });
     });
 
+    // Wash now button
+    $('.wash-now-button').click(function() {
+        var bagId = $(this).data('bag-id');
+        var ajaxUrl = `{% url 'wash_now' 0 %}`.replace('0', bagId);
+
+        $.ajax({
+            url: ajaxUrl,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert('Wassen Succesvol!: ' + response.message);
+                    location.reload(); // Refresh the page to reflect changes
+                } else {
+                    alert('Wassen mislukt: ' + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Technical error: ' + error);
+            }
+        });
+    });
+});
 </script>
-
-
-</script>
-
-
 {% endblock %}
+
 <!-- 
 $('.return-dirty-button').click(function() {
     var participantId = $(this).data('participant-id');
