@@ -8,15 +8,15 @@ from django.contrib.auth.models import User
 from Location.models import Location
 from Notes.models import Note
 from django.forms import ModelForm
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from Notes.views import NoteForm
 
-
-# Create your views here.
 
 
 @login_required
 def dashboard_view(request):
-    # Assuming your Employee model has a 'user' field that links to the Django User.
-    employee = request.user.employee  # Make sure 'employee' field is accessible like this
+    employee = request.user.employee 
     participants = Participant.objects.filter(registered_location=employee.location)
     participant_data = []
 
@@ -33,6 +33,7 @@ def dashboard_view(request):
     }
     return render(request, 'Notes/landing_page.html', context)
 
+# Note form for creating notes
 class NoteForm(ModelForm):
     class Meta:
         model = Note
@@ -44,18 +45,19 @@ def participant_detail(request, id):
     sleeping_bags = SleepingBags.objects.filter(linked_participant=participant)
     status_choices = SleepingBags._meta.get_field('status').choices
 
-    
     employee = request.user.employee
     if request.method == 'POST':
         form = NoteForm(request.POST)
         if form.is_valid():
             note = form.save(commit=False)
+            note.participant = participant 
             note.employee = employee
             note.save()
-    
-    form = NoteForm()
-    new_notes = Note.objects.filter(participant=participant)
+            return HttpResponseRedirect(reverse('participant_detail', args=[id]))  # Redirect to clear the form
+    else:
+        form = NoteForm(initial={'participant': participant})
 
+    new_notes = Note.objects.filter(participant=participant).order_by('-date')  # Order notes by date
 
     return render(request, 'Notes/participant_detail.html', {
         'participant': participant,
@@ -66,7 +68,9 @@ def participant_detail(request, id):
     })
 
 
-#A view to ad d and remove participants
+
+#A view to add and remove participants
+
 @login_required
 def add_participant(request):
     if not request.user.employee.can_manage_participants:
@@ -77,7 +81,14 @@ def add_participant(request):
     if request.method == 'POST':
         form = ParticipantForm(request.POST, employee_location=employee_location)
         if form.is_valid():
-            participant = form.save()
+            participant = form.save(commit=False)
+            participant.is_active = True
+
+            # Check for custom document type
+            if form.cleaned_data['document_type'] == 'other':
+                participant.document_type = form.cleaned_data['custom_document_type']
+            participant.save()
+
             # Assign the first sleeping bag
             sleeping_bag_1 = form.cleaned_data['sleeping_bag_1']
             if sleeping_bag_1:
@@ -106,16 +117,20 @@ def add_participant(request):
         'form': form,
         'available_sleeping_bags': available_sleeping_bags
     })
+
 @login_required
 def remove_participant(request, participant_id):
     if not request.user.employee.can_manage_participants:
         return redirect('landing_page')
 
     participant = get_object_or_404(Participant, id=participant_id)
-
+    
     # When a user is deleted --> it resets their sleepingbags. 
     SleepingBags.objects.filter(linked_participant=participant).update(linked_participant=None, is_in_facility=True)
-
-    participant.delete()
+    
+    participant.is_active = False  # Now mark the participant as inactive
+    participant.save()
+    
     return redirect('landing_page')
+
 

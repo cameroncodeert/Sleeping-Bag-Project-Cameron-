@@ -7,20 +7,47 @@
     <style>
         .errorlist {color:red}
     </style>
+    <script>
+        function toggleCustomDocumentType() {
+            var documentTypeField = document.getElementById('id_document_type');
+            var customDocumentTypeField = document.getElementById('id_custom_document_type');
+            if (documentTypeField.value === 'other') {
+                customDocumentTypeField.parentElement.style.display = 'block';
+            } else {
+                customDocumentTypeField.parentElement.style.display = 'none';
+            }
+        }
+        window.onload = function() {
+            toggleCustomDocumentType();
+            document.getElementById('id_document_type').onchange = toggleCustomDocumentType;
+        }
+    </script>
 </head>
 <body>
     <h1>Registreer</h1>
     <form method="post">
         {% csrf_token %}
         {{ user_form.as_p }}
-        {{employee_form.as_p}}
+        {{ employee_form.as_p }}
+        <div class="form-row">
+            <label for="id_document_type">Type Document:</label>
+            {{ participant_form.document_type }}
+        </div>
+        <div class="form-row" style="display:none;">
+            <label for="id_custom_document_type">Ander Document Type:</label>
+            {{ participant_form.custom_document_type }}
+        </div>
+        <div class="form-row">
+            <label for="id_document_date">Datum van het Document:</label>
+            {{ participant_form.document_date }}
+        </div>
         <button type="submit">Registreer</button>
     </form>
-    {%if errors%}
-    
-    {{errors}}
+    {% if errors %}
+        <div class="errorlist">
+            {{ errors }}
+        </div>
     {% endif %}
-    <a href="{% url 'login' %}">Heeft u al een account?
-        Dan kunt u hier inloggen.</a>
+    <a href="{% url 'login' %}">Heeft u al een account? Dan kunt u hier inloggen.</a>
 </body>
 </html>

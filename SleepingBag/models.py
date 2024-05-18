@@ -2,8 +2,7 @@ from django.db import models
 from Location.models import Location
 from Participant.models import Participant
 
-# Create your models here.
-# enumeration how it looks, how it saved or used by a dev
+# Enumeration for the sleepign bag status choices
 class StatusChoice(models.TextChoices):
     GOOD = 'Good', 'Goed'
     DAMAGED = 'Damaged', 'Beschadigd'

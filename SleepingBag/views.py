@@ -26,9 +26,12 @@ logger = logging.getLogger(__name__)
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, HttpResponse
 
+
+# Swap the sleeping bag view
+
 def swap_sleeping_bag(request, participant_id):
     # Check if the request is AJAX
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest': # Check if the request is AJAX
         try:
             participant = get_object_or_404(Participant, pk=participant_id)
             current_location = participant.registered_location
@@ -42,7 +45,7 @@ def swap_sleeping_bag(request, participant_id):
                 dirty_bag.save()
 
                 clean_bag.is_in_facility = False
-                clean_bag.is_washed = False # Slaapzak moet gewassen worden wanneer deze is uitgedeeld
+                clean_bag.is_washed = False 
                 clean_bag.save()
 
                 return JsonResponse({"success": True, "message": "De Slaapzakken zijn succesvol omgeruild"})
@@ -57,8 +60,9 @@ def swap_sleeping_bag(request, participant_id):
 
 from django.http import HttpResponse
 
+# View for the succes
 def success_view(request):
-    # Here you could render a template or just return a simple HttpResponse
+    # render a template or just return a simple HttpResponse?
     return HttpResponse("Swap successful!")
 
 logger = logging.getLogger(__name__)
@@ -106,6 +110,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# View for washing now
 def wash_now(request, bag_id):
     if request.method == 'POST':
         try:
@@ -118,7 +123,7 @@ def wash_now(request, bag_id):
             return JsonResponse({"success": False, "message": str(e)})
     return HttpResponse("This endpoint requires a POST request.", status=400)
 
-
+# View for upudating the bag
 def update_bag(request, bag_id):
     if request.method == 'POST':
         try:
