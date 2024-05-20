@@ -19,30 +19,25 @@ from django.urls import path, include
 # from django.contrib.auth.views import LoginView
 from .views import landing_page, login_user, register_user, logout_user
 from SleepingBag.views import swap_sleeping_bag, success_view, report_lost_bag, wash_now, update_bag #return_dirty_bag
-from Participant.views import dashboard_view, participant_detail
 from django.contrib.auth import views as auth_views
 from Employee.views import manageEmployee, dashboard_view, participant_detail
 from Participant.views import add_participant, remove_participant
 from Notes import views as notes_views 
 
-    
+
+
+
 
 urlpatterns = [
     path('', dashboard_view, name="landing_page"),
-    path('add_participant/', add_participant, name='add_participant'),
-    path('participant/<int:id>/', participant_detail, name='participant_detail'),
-    path('manage_note/', notes_views.manage_note, name='manage_note'),  
-    path('remove_participant/<int:participant_id>/', remove_participant, name='remove_participant'),
-    path('manage_employee/', manageEmployee, name='manage_employee'),
-    path('swap_bag/<int:participant_id>/', swap_sleeping_bag, name='swap_bag'),
-    path('report_lost_bag/<int:bag_id>/', report_lost_bag, name='report_lost_bag'),
-    path('wash_now/<int:bag_id>/', wash_now, name='wash_now'),
-    path('update_bag/<int:bag_id>/', update_bag, name='update_bag'),
+    # path('participant/<int:id>/', participant_detail, name='participant_detail'),
+    path('participant/', include('Participant.urls',namespace="participants")),
+    path('bags/', include('SleepingBag.urls', namespace="bags")),
    # path('return_dirty_bag/<int:participant_id>/', views.return_dirty_bag, name='return_dirty_bag'),
     path('success/', success_view, name='success'),
     path('admin/', admin.site.urls),
     path('location/', include("Location.urls")),
-    path('note/', include("Notes.urls")),
+    path('notes/', include("Notes.urls")),
     path('login/', login_user, name="login" ),
     path('register/', register_user, name='register'),
     path('logout/', logout_user, name='logout'),
