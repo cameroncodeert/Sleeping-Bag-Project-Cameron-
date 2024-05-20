@@ -22,3 +22,18 @@ Create two templates one for registration one for the landing page.
     if not redirect to register view 
     given your authentication staus either directed to login passworpage (here you will be given the option to register instead) or to the landing page)
 
+
+## Particpant
+### models.py
+- unicity check for date of birth, first_name and last_name combination
+### views.py and participant_details
+- write a custom jinja function to maange more thatn 2 sleeping bads and conditionnaly render the swap button
+## Sleeeping Bag
+## models.py
+- last_washing_cycle should be updated only when is_washed go from false to true
+## forms.py
+- add last_washing_cycle as a read_only field
+
+
+
+

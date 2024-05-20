@@ -1,8 +1,10 @@
-from django.shortcuts import render
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
-
 from .models import SleepingBags, Participant, StatusChoice
+from django.utils import timezone
+from SleepingBag.forms import SleepingBagsForm
+from SleepingBag.models import SleepingBags
+
 # Create your views here.
 # user stories
 # Cameron is an admin and has access ot the dashboard
@@ -20,22 +22,19 @@ from .models import SleepingBags, Participant, StatusChoice
 # Receive form, entr the name the particpant,
 
 
-import logging
-
-logger = logging.getLogger(__name__)
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, HttpResponse
-
-
 # Swap the sleeping bag view
+from django.utils.decorators import async_only_middleware
 
+
+
+# the following is not yet save/secured doesnt require logged in
 def swap_sleeping_bag(request, participant_id):
     # Check if the request is AJAX
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest': # Check if the request is AJAX
         try:
             participant = get_object_or_404(Participant, pk=participant_id)
-            current_location = participant.registered_location
-            clean_bag = SleepingBags.objects.filter(location=current_location, is_washed=True, is_in_facility=True).first()
+            # a swap, we have a clean sleeping bag in the facility attache to the participant
+            clean_bag = SleepingBags.objects.filter(linked_participant=participant, is_washed=True, is_in_facility=True).first()
             dirty_bag = SleepingBags.objects.filter(linked_participant=participant, is_in_facility=False).first()
 
             if clean_bag and dirty_bag:
@@ -47,25 +46,14 @@ def swap_sleeping_bag(request, participant_id):
                 clean_bag.is_in_facility = False
                 clean_bag.is_washed = False 
                 clean_bag.save()
-
+                print('there befor return true')
                 return JsonResponse({"success": True, "message": "De Slaapzakken zijn succesvol omgeruild"})
             else:
-                return JsonResponse({"success": False, "message": "No clean or dirty sleeping bags available for swapping."})
+                return JsonResponse({"success": False, "message": "Het omruilen is niet gelukt"})
         except Exception as e:
             return JsonResponse({"success": False, "message": str(e)})
     return HttpResponse("This endpoint requires an AJAX request.", status=400)
 
-
-
-
-from django.http import HttpResponse
-
-# View for the succes
-def success_view(request):
-    # render a template or just return a simple HttpResponse?
-    return HttpResponse("Swap successful!")
-
-logger = logging.getLogger(__name__)
 
 def report_lost_bag(request, bag_id):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -82,34 +70,6 @@ def report_lost_bag(request, bag_id):
             return JsonResponse({"success": False, "message": str(e)})
     return HttpResponse("This endpoint requires an AJAX request.", status=400)
 
-# def return_dirty_bag(request, participant_id):
-#     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-#         try:
-#             participant = get_object_or_404(Participant, pk=participant_id)
-#             dirty_bag = SleepingBags.objects.filter(linked_participant=participant, is_in_facility=False).first()
-
-#             if dirty_bag:
-#                 dirty_bag.is_in_facility = True
-#                 dirty_bag.is_washed = False
-#                 dirty_bag.save()
-#                 return JsonResponse({"success": True, "message": "The dirty bag has been returned for washing."})
-#             else:
-#                 return JsonResponse({"success": False, "message": "No dirty bags found to return."})
-#         except Exception as e:
-#             return JsonResponse({"success": False, "message": str(e)})
-#     return HttpResponse("This endpoint requires an AJAX request.", status=400)
-
-# def success_view(request):
-#     return HttpResponse("Action successful!")
-
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse, HttpResponse
-from .models import SleepingBags, Participant, StatusChoice
-from django.utils import timezone
-import logging
-
-logger = logging.getLogger(__name__)
-
 # View for washing now
 def wash_now(request, bag_id):
     if request.method == 'POST':
@@ -124,20 +84,14 @@ def wash_now(request, bag_id):
     return HttpResponse("This endpoint requires a POST request.", status=400)
 
 # View for upudating the bag
-def update_bag(request, bag_id):
-    if request.method == 'POST':
-        try:
-            bag_to_update = get_object_or_404(SleepingBags, pk=bag_id)
-            status = request.POST.get('status')
-            is_washed = request.POST.get('is_washed') == 'true'
-            is_in_facility = request.POST.get('is_in_facility') == 'true'
-            
-            bag_to_update.status = status
-            bag_to_update.is_washed = is_washed
-            bag_to_update.is_in_facility = is_in_facility
-            bag_to_update.save()
-            
-            return redirect('participant_detail', id=bag_to_update.linked_participant.id)
-        except Exception as e:
-            return HttpResponse(str(e), status=400)
+
+def update_bag(request, bag_id):       
+    if request.method=="POST":
+        bag= SleepingBags.objects.get(id=bag_id)
+        form = SleepingBagsForm(request.POST, instance=bag)            
+        if form.is_valid():                
+            form.save()                        
+            return redirect('Participant:participant_details', id=bag.linked_participant.pk)
+        else:
+            print("rerrors", form.errors)
     return HttpResponse("This endpoint requires a POST request.", status=400)

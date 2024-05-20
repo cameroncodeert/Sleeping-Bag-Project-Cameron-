@@ -14,14 +14,14 @@
         <!-- Button to add participant -->
         {% if employee.can_manage_participants %}
         <div>
-            <a href="{% url 'add_participant' %}" class="button is-primary">Deelnemer Toevoegen</a>
+            <a href="{% url 'participants:add_participant' %}" class="button is-primary">Deelnemer Toevoegen</a>
         </div>
         {% endif %}
         
         <div class="participants-grid">
             {% for data in participant_data %}
             <div class="participant-card">
-                <a href="{% url 'participant_detail' data.participant.id %}">
+                <a href="{% url 'participants:participant_details' data.participant.id %}">
                     <h3>{{ data.participant.full_name }} - Geboren op: {{ data.participant.date_of_birth|date:"Y-m-d" }}</h3>
                     <ul>
                         {% for bag in data.sleeping_bags %}
@@ -34,7 +34,7 @@
                 
                 <!-- Button to remove participant -->
                 {% if employee.can_manage_participants %}
-                <a href="{% url 'remove_participant' data.participant.id %}" class="button is-danger">Verwijder Deelnemer</a>
+                <a href="{% url 'participants:remove_participant' data.participant.id %}" class="button is-danger">Verwijder Deelnemer</a>
                 {% endif %}
             </div>
             {% endfor %}

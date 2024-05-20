@@ -1,10 +1,9 @@
 from django.shortcuts import render
-#from django import forms
-from django.forms import ModelForm
 from .models import Note
 from Employee.models import Employee
+from .forms import NoteForm
 from django.contrib.auth.decorators import login_required
- 
+from django.shortcuts import redirect
 # Create your views here.
 
 #class NoteForm(forms.Form): 
@@ -13,23 +12,28 @@ from django.contrib.auth.decorators import login_required
 #     note = forms.CharField(label= 'The note about the participant', max_length=500)
 #     participant = form
 
-class NoteForm(ModelForm):
-    class Meta:
-        model = Note
-        fields = ["note","participant"]
 
 #view function
 #change name below still to do 
+# list and add
 @login_required
 def manage_note(request):
-    # check if the user is authenticated
+  
     employee = Employee.objects.get(user=request.user)
+    referer = request.META.get('HTTP_REFERER')
     if request.method=='POST':          
+        # next_url = request.POST.get('next')
         form = NoteForm(request.POST)
+        print('referrer',referer)
+        # print('next url', next_url)
         if form.is_valid():
+            print('is vlai')
             note = form.save(commit=False)          
             note.employee = employee
             note.save()
+            if referer:
+                redirect(referer)
+
     # selct where first_condition AND second condition
     # 1) get the employee currently logged in 
     # print('employee location', type(employee.location))

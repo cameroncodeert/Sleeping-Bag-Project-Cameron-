@@ -14,9 +14,10 @@
         <div class="container">
             <h1 class="title">Notes</h1>
             <h2 class="subtitle">Add a New Note</h2>
-            <form method="post" action="{% url 'manageNote' %}">
+            <form method="post" action="{% url 'notes:add' %}">
                 {% csrf_token %}
-                <div class="field">
+                {{form}}
+                <!-- <div class="field">
                     <label class="label">Note</label>
                     <div class="control">
                         {{ form.note }}
@@ -27,7 +28,7 @@
                     <div class="control">
                         {{ form.participant }}
                     </div>
-                </div>
+                </div> -->
                 <div class="control">
                     <button class="button is-link" type="submit">Submit</button>
                 </div>

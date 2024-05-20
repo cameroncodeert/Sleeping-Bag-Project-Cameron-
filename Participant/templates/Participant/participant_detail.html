@@ -31,49 +31,40 @@
             </header>
             <div class="card-content">
                 <ul>
-                    {% for bag in sleeping_bags %}
-                    <form method="POST" action="{% url 'update_bag' bag.id %}">
+                    {% for bag, form in bags_forms_ext %}
+                    
+                    <form method="POST" action="{% url 'bags:update' bag.pk %}">
                         {% csrf_token %}
-                        <li>
-                            <strong>Slaapzak nummer:</strong> {{ bag.id }},
-                            <strong>Status:</strong>
-                            <select name="status">
-                                {% for choice in status_choices %}
-                                <option value="{{ choice.0 }}" {% if bag.status == choice.0 %} selected {% endif %}>{{ choice.1 }}</option>
-                            {% endfor %}
-                            </select>
-                            <button type="submit">Save</button>
-                            </form>
-                            
-                            <strong>Laatst Gewassen:</strong>
-                            <span>{{ bag.last_washing_cycle }}</span>
-                            <button type="button" class="btn btn-primary wash-now-button" data-bag-id="{{ bag.id }}">Was nu</button>,
-
-                            <strong>Gewassen:</strong>
-                            <select name="is_washed">
-                                <option value="true" {% if bag.is_washed %}selected{% endif %}>✔ Gewassen</option>
-                                <option value="false" {% if not bag.is_washed %}selected{% endif %}>✘ Moet gewassen worden</option>
-                            </select>,
-
-                            <strong>Locatie:</strong>
-                            <select name="is_in_facility">
-                                <option value="true" {% if bag.is_in_facility %}selected{% endif %}>Op locatie</option>
-                                <option value="false" {% if not bag.is_in_facility %}selected{% endif %}>Met de gebruiker</option>
-                            </select>
-                            
-                            <!-- Report Lost Button -->
-                            <a href="javascript:void(0);" class="btn btn-danger report-lost-button" data-bag-id="{{ bag.id }}">Verloren melden</a>
-                        </li>
+                        <p>Slaapzak nummer: : {{ bag.pk}}</p>
+                        <p>Laatst Gewassen: : {{ bag.last_washing_cycle }}</p>
+                        {{ form }}
+                        <button class="button" type="submit">Update</button>
                     </form>
                     {% empty %}
                     <li>Geen slaapzakken gevonden.</li>
                     {% endfor %}
                 </ul>
-                <!-- Swap Button -->
-                <a href="javascript:void(0);" class="btn btn-primary swap-button" data-participant-id="{{ participant.id }}">Slaapzakken omruilen</a>
+                
+                <!-- <a href="{% url 'bags:swap_bag' participant.id %}"
+                 class="btn btn-primary" >
+                    <button class="button is-link">Slaapzakken omruilen</button></a> -->
+                
+                <a href="javascript:void(0);" class="btn btn-primary swap-button" data-participant-id="{{ participant.id }}">
+                    <button class="button is-link">Slaapzakken omruilen</button></a>
+                <!-- Swap Button, rendered conditionnaly if we have two sleeping bags, one sleeping is dirty and the other one is clean and in the facility -->
+                <!-- {% with bag_1=bags_forms_ext.0%}
+                 <p>{{bags_forms_ext.0.0.is_washed}}</p> -->
+                <!-- <h1>Hello world {{bag_1.last_washing_cycle}}</h1>
+                {%endwith%}
+                {% if bags_forms_ext.0.0.is_washed and bags_forms_ext.0.0.is_in_facility and not bags_forms_ext.1.0.is_washed %}  -->
+                <!-- {%endif%} -->
             </div>
         </div>
     </div>
+ 
+                            <!-- Report Lost Button
+                            <a href="javascript:void(0);" class="btn btn-danger report-lost-button" data-bag-id="{{ bag.id }}">Verloren melden</a> -->
+
 <!-- Notities -->
 <div class="column is-full">
     <div class="card">
@@ -84,23 +75,25 @@
         </header>
         <div class="card-content">
             <div class="content">
-                <form method="post" action="{% url 'participant_detail' participant.id %}">
+                <form method="post" action="{% url 'notes:add' %}">
+                    <!-- <input type="hidden" name="next" value="{{ request.path }}"> -->
                     {% csrf_token %}
-                    <div class="field">
+                    {{note_form.as_p}}
+                    <!-- <div class="field">
                         <label class="label">Note</label>
                         <div class="control">
                             <textarea name="note" rows="4" class="textarea">{{ form.note.value }}</textarea>
                         </div>
                     </div>
                     <div class="field">
-                        {{ form.participant.as_hidden }} 
-                    </div>
+                        {{ form.participant.as_hidden }}
+                    </div> -->
                     <div class="control">
                         <button class="button is-link" type="submit">Submit</button>
                     </div>
                 </form>
 
-                <h2 class="subtitle">Existing Notes are:</h2>
+                <h2 class="subtitle">Recente Notities:</h2>
                 <div class="content">
                     <ul>
                         {% for note in new_notes %}
@@ -126,7 +119,7 @@
 $(document).ready(function() {
     $('.swap-button').click(function() {
         var participantId = $(this).data('participant-id');
-        var ajaxUrl = `{% url 'swap_bag' 0 %}`.replace('0', participantId);
+        var ajaxUrl = `{% url 'bags:swap_bag' 0 %}`.replace('0', participantId);
 
         $.ajax({
             url: ajaxUrl,
@@ -134,7 +127,8 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
-                    alert('Ruilen Succesvol!: ' + response.message);
+                    // alert('Ruilen Succesvol!: ' + response.message);
+                    window.location.reload()
                 } else {
                     alert('Ruilen mislukt: ' + response.message);
                 }
@@ -147,7 +141,7 @@ $(document).ready(function() {
 
     $('.report-lost-button').click(function() {
         var bagId = $(this).data('bag-id');
-        var ajaxUrl = `{% url 'report_lost_bag' 0 %}`.replace('0', bagId);
+        var ajaxUrl = `{% url 'bags:report_lost_bag' 0 %}`.replace('0', bagId);
 
         $.ajax({
             url: ajaxUrl,
@@ -156,7 +150,7 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success) {
                     alert('Melding Succesvol!: ' + response.message);
-                    location.reload(); // Refresh the page to reflect changes
+                    window.location.reload(); // Refresh the page to reflect changes
                 } else {
                     alert('Melding mislukt: ' + response.message);
                 }
@@ -170,7 +164,7 @@ $(document).ready(function() {
     // Wash now button
     $('.wash-now-button').click(function() {
         var bagId = $(this).data('bag-id');
-        var ajaxUrl = `{% url 'wash_now' 0 %}`.replace('0', bagId);
+        var ajaxUrl = `{% url 'bags:wash_now' 0 %}`.replace('0', bagId);
 
         $.ajax({
             url: ajaxUrl,

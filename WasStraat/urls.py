@@ -18,11 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 # from django.contrib.auth.views import LoginView
 from .views import landing_page, login_user, register_user, logout_user
-from SleepingBag.views import swap_sleeping_bag, success_view, report_lost_bag, wash_now, update_bag #return_dirty_bag
 from django.contrib.auth import views as auth_views
 from Employee.views import manageEmployee, dashboard_view, participant_detail
-from Participant.views import add_participant, remove_participant
-from Notes import views as notes_views 
 
 
 
@@ -33,11 +30,10 @@ urlpatterns = [
     # path('participant/<int:id>/', participant_detail, name='participant_detail'),
     path('participant/', include('Participant.urls',namespace="participants")),
     path('bags/', include('SleepingBag.urls', namespace="bags")),
-   # path('return_dirty_bag/<int:participant_id>/', views.return_dirty_bag, name='return_dirty_bag'),
-    path('success/', success_view, name='success'),
-    path('admin/', admin.site.urls),
+    path('notes/', include("Notes.urls", namespace="notes")),
     path('location/', include("Location.urls")),
-    path('notes/', include("Notes.urls")),
+   # path('return_dirty_bag/<int:participant_id>/', views.return_dirty_bag, name='return_dirty_bag'),
+    path('admin/', admin.site.urls),
     path('login/', login_user, name="login" ),
     path('register/', register_user, name='register'),
     path('logout/', logout_user, name='logout'),

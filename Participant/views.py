@@ -11,6 +11,8 @@ from django.forms import ModelForm
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from Notes.views import NoteForm
+from Notes.forms import NoteForm
+from SleepingBag.forms import SleepingBagsForm, SleepingBagsCustomForm
 
 
 
@@ -33,43 +35,38 @@ def dashboard_view(request):
     }
     return render(request, 'Notes/landing_page.html', context)
 
-# Note form for creating notes
-class NoteForm(ModelForm):
-    class Meta:
-        model = Note
-        fields = ["note","participant"]
 
 @login_required
 def participant_detail(request, id):
     participant = get_object_or_404(Participant, pk=id)
-    sleeping_bags = SleepingBags.objects.filter(linked_participant=participant)
-    status_choices = SleepingBags._meta.get_field('status').choices
+    sleeping_bags = SleepingBags.objects.filter(linked_participant=participant).order_by('-is_washed')
+    bags_forms = [SleepingBagsForm(instance=sleeping_bag) for sleeping_bag in sleeping_bags]
+    bags_forms_ext = zip(sleeping_bags, bags_forms)
 
+# last washing date
     employee = request.user.employee
     if request.method == 'POST':
         form = NoteForm(request.POST)
         if form.is_valid():
             note = form.save(commit=False)
-            note.participant = participant 
             note.employee = employee
             note.save()
             return HttpResponseRedirect(reverse('participant_detail', args=[id]))  # Redirect to clear the form
     else:
-        form = NoteForm(initial={'participant': participant})
+        note_form = NoteForm(initial={'participant': participant}, hidden=True )  
 
     new_notes = Note.objects.filter(participant=participant).order_by('-date')  # Order notes by date
-
-    return render(request, 'Notes/participant_detail.html', {
+    return render(request, 'Participant/participant_detail.html', {
         'participant': participant,
         'sleeping_bags': sleeping_bags,
-        'status_choices': status_choices, 
-        'form': form,
-        'new_notes': new_notes
+        "note_form": note_form,
+        "my_form": bags_forms[0],
+        'new_notes': new_notes,
+        "bags_forms_ext":bags_forms_ext
     })
 
 
 
-#A view to add and remove participants
 
 @login_required
 def add_participant(request):
@@ -113,7 +110,7 @@ def add_participant(request):
         is_in_facility=True
     )
 
-    return render(request, 'add_participant.html', {
+    return render(request, 'Participant/add_participant.html', {
         'form': form,
         'available_sleeping_bags': available_sleeping_bags
     })

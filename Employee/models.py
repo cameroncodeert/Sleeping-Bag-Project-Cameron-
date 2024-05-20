@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from Location.models import Location
 
 
-# Define my Employee model with user details and location details
+# Defining my Employee model with user details and location details
 
 class Employee(models.Model):
     ROLE_CHOICES = [
