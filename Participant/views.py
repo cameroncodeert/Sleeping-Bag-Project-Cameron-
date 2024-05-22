@@ -43,7 +43,6 @@ def participant_detail(request, id):
     bags_forms = [SleepingBagsForm(instance=sleeping_bag) for sleeping_bag in sleeping_bags]
     bags_forms_ext = zip(sleeping_bags, bags_forms)
 
-# last washing date
     employee = request.user.employee
     if request.method == 'POST':
         form = NoteForm(request.POST)
@@ -53,20 +52,24 @@ def participant_detail(request, id):
             note.save()
             return HttpResponseRedirect(reverse('participant_detail', args=[id]))  # Redirect to clear the form
     else:
-        note_form = NoteForm(initial={'participant': participant}, hidden=True )  
+        note_form = NoteForm(initial={'participant': participant}) 
 
     new_notes = Note.objects.filter(participant=participant).order_by('-date')  # Order notes by date
-    return render(request, 'Participant/participant_detail.html', {
+
+    context = {
         'participant': participant,
         'sleeping_bags': sleeping_bags,
-        "note_form": note_form,
-        "my_form": bags_forms[0],
+        'note_form': note_form,
         'new_notes': new_notes,
-        "bags_forms_ext":bags_forms_ext
-    })
+        'bags_forms_ext': bags_forms_ext
+    }
 
+    # Add 'my_form' to context only if 'bags_forms' is not empty so that we can also click on Participants
+    #without any sleeping bags assigned
+    if bags_forms:
+        context['my_form'] = bags_forms[0]
 
-
+    return render(request, 'Participant/participant_detail.html', context)
 
 @login_required
 def add_participant(request):
