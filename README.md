@@ -1,3 +1,4 @@
+# git Enhanced user experience by adding a confirmation dialog before deleting participants
 
 
 # Improvements

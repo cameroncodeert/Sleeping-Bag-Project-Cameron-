@@ -19,7 +19,7 @@ from SleepingBag.forms import SleepingBagsForm, SleepingBagsCustomForm
 @login_required
 def dashboard_view(request):
     employee = request.user.employee 
-    participants = Participant.objects.filter(registered_location=employee.location)
+    participants = Participant.objects.filter(registered_location=employee.location, is_active=True)
     participant_data = []
 
     for participant in participants:

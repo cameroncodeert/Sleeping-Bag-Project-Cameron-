@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import participant_detail, remove_participant, add_participant
 
-app_name = "Participant"
+app_name = "participants"
 urlpatterns = [
 
     path('<int:id>/', participant_detail, name='participant_details'),

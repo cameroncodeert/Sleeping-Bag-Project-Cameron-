@@ -28,7 +28,7 @@ from Employee.views import manageEmployee, dashboard_view, participant_detail
 urlpatterns = [
     path('', dashboard_view, name="landing_page"),
     # path('participant/<int:id>/', participant_detail, name='participant_detail'),
-    path('participant/', include('Participant.urls',namespace="participants")),
+    path('participants/', include('Participant.urls', namespace='participants')),
     path('bags/', include('SleepingBag.urls', namespace="bags")),
     path('notes/', include("Notes.urls", namespace="notes")),
     path('location/', include("Location.urls")),

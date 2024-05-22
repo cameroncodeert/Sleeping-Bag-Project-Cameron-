@@ -1,7 +1,9 @@
 {% extends 'Notes/base.html' %}
+{% load static %}
 
 {% block head %}
 <title>Uw Dashboard</title>
+
 {% endblock %}
 
 {% block body %}
@@ -20,7 +22,8 @@
         
         <div class="participants-grid">
             {% for data in participant_data %}
-            <div class="participant-card">
+                {% if data.participant.is_active %}  
+            <div class="participant-card"> 
                 <a href="{% url 'participants:participant_details' data.participant.id %}">
                     <h3>{{ data.participant.full_name }} - Geboren op: {{ data.participant.date_of_birth|date:"Y-m-d" }}</h3>
                     <ul>
@@ -34,9 +37,14 @@
                 
                 <!-- Button to remove participant -->
                 {% if employee.can_manage_participants %}
-                <a href="{% url 'participants:remove_participant' data.participant.id %}" class="button is-danger">Verwijder Deelnemer</a>
-                {% endif %}
+                <a href="{% url 'participants:remove_participant' participant_id=data.participant.id %}"
+                    class="button is-danger"
+                    onclick="return confirm('Weet u zeker dat u deze deelnemer wilt verwijderen?') && confirm('Deze actie kan niet ongedaan worden gemaakt. Wilt u doorgaan?');">
+                    Verwijder Deelnemer
+                </a>
+            {% endif %}   
             </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
