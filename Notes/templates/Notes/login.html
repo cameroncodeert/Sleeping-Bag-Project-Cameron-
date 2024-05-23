@@ -3,20 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        .login-container {
+            background-color: #f5f5f5;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .login-title {
+            font-family: 'Arial', sans-serif;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <form action="/login/" method="POST">
-        {% csrf_token %}
-        <label>Voer uw gebruikersnaam in</label>
-    <input type="username" name="username"/>
-    
-    
-        <label>Voer uw wachtwoord in</label>
-    <input type="password" name="password"/>
-    <input type="submit"/>
-    </form>
-    <a href="/register">Registreren</a>
-    
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-one-third"> 
+                    <div class="login-container">
+                        <h2 class="title is-2 login-title">Welkom Terug!</h2>
+
+                        <form action="/login/" method="POST">
+                            {% csrf_token %} 
+
+                            <div class="field">
+                                <label class="label" for="username">Uw Gebruikersnaam</label>
+                                <div class="control has-icons-left">
+                                    <input class="input" id="username" type="text" name="username" placeholder="Vul hier uw Gebruikersnaam in" required>
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label" for="password">Wachtwoord</label>
+                                <div class="control has-icons-left">
+                                    <input class="input" id="password" type="password" name="password" placeholder="Vul hier uw wachtwoord in" required>
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <button class="button is-primary is-fullwidth" type="submit">Login</button>
+                            </div>
+                        </form>
+                        <p class="has-text-centered">
+                            Bent u nieuw? <a href="/register">Uw kunt hier ook een account aanmaken</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
 </body>
 </html>
