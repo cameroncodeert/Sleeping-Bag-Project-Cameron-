@@ -17,18 +17,6 @@
             <form method="post" action="{% url 'notes:add' %}">
                 {% csrf_token %}
                 {{form}}
-                <!-- <div class="field">
-                    <label class="label">Note</label>
-                    <div class="control">
-                        {{ form.note }}
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Participant</label>
-                    <div class="control">
-                        {{ form.participant }}
-                    </div>
-                </div> -->
                 <div class="control">
                     <button class="button is-link" type="submit">Submit</button>
                 </div>
@@ -46,29 +34,3 @@
     </section>
 </body>
 </html>
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes</title>
-    {}
-</head>
-<body>
-    {% include "Notes/header.html" %}
-    <h1>Notes</h1>
-    <h2>Add a New Note</h2>
-    <form method="post" action="/note/">
-        {% csrf_token %}
-        {{form}}
-        <input type="submit" value="Submit">
-    </form>
-
-    <h2>Existing Notes are:</h2>
-    {% for note in new_notes %}
-    <li>{{note}} by {{note.employee}}</li>
-    
-    {%endfor%}
-
-</body>
-</html> -->

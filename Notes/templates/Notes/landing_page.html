@@ -3,7 +3,6 @@
 
 {% block head %}
 <title>Uw Dashboard</title>
-
 {% endblock %}
 
 {% block body %}
@@ -19,32 +18,45 @@
             <a href="{% url 'participants:add_participant' %}" class="button is-primary">Deelnemer Toevoegen</a>
         </div>
         {% endif %}
-        
+
+        <!-- Active Participants -->
         <div class="participants-grid">
             {% for data in participant_data %}
-                <div class="participant-card {% if not data.participant.is_active %}inactive{% endif %}">  
-                    <a href="{% url 'participants:participant_details' data.participant.id %}">
-                    <h3>{{ data.participant.full_name }} - Geboren op: {{ data.participant.date_of_birth|date:"Y-m-d" }}</h3>
-                    <ul>
-                        {% for bag in data.sleeping_bags %}
-                        <li>Slaapzak Status: {{ bag.status }}, Laatst gewassen: {{ bag.last_washing_cycle|date:"Y-m-d" }}</li>
-                        {% empty %}
-                        <li>Geen slaapzakken gevonden voor deze deelnemer.</li>
-                        {% endfor %}
-                    </ul>
-                </a>
-                
-                <!-- Button to remove participant -->
-                {% if employee.can_manage_participants %}
-                <a href="{% url 'participants:remove_participant' participant_id=data.participant.id %}"
-                    class="button is-danger"
-                    onclick="return confirm('Weet u zeker dat u deze deelnemer wilt verwijderen?') && confirm('Deze actie kan niet ongedaan worden gemaakt. Wilt u doorgaan?');">
-                    Verwijder Deelnemer
-                </a>
-            {% endif %}   
-            </div>
+                {% if data.participant.is_active %}
+                    <div class="participant-card"> 
+                        <a href="{% url 'participants:participant_details' data.participant.id %}">
+                            <h3>{{ data.participant.full_name }} - <span style="color:green;">Actief</span></h3>
+                            <ul>
+                                {% for bag in data.sleeping_bags %}
+                                    <li>Slaapzak Status: {{ bag.status }}, Laatst gewassen: {{ bag.last_washing_cycle|date:"Y-m-d" }}</li>
+                                {% empty %}
+                                    <li>Geen slaapzakken gevonden voor deze deelnemer.</li>
+                                {% endfor %}
+                            </ul>
+                        </a>
+                        {% if employee.can_manage_participants %}
+                            <a href="{% url 'participants:remove_participant' participant_id=data.participant.id %}"
+                                class="button is-danger"
+                                onclick="return confirm('Weet u zeker dat u deze deelnemer wilt verwijderen?') && confirm('Deze actie kan niet ongedaan worden gemaakt. Wilt u doorgaan?');">
+                                Verwijder Deelnemer
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
+
+        <!-- Inactive Participants -->
+        <h2 class="subtitle" style="margin-top: 40px;">Inactieve Deelnemers:</h2>
+        <ul class="inactive-list">
+            {% for data in participant_data %}
+                {% if not data.participant.is_active %}
+                    <li>
+                        {{ data.participant.full_name }} - <span style="color:gray;">Inactief</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
     </div>
 </section>
 {% endblock %}
