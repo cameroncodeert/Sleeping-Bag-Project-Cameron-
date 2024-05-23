@@ -22,9 +22,8 @@
         
         <div class="participants-grid">
             {% for data in participant_data %}
-                {% if data.participant.is_active %}  
-            <div class="participant-card"> 
-                <a href="{% url 'participants:participant_details' data.participant.id %}">
+                <div class="participant-card {% if not data.participant.is_active %}inactive{% endif %}">  
+                    <a href="{% url 'participants:participant_details' data.participant.id %}">
                     <h3>{{ data.participant.full_name }} - Geboren op: {{ data.participant.date_of_birth|date:"Y-m-d" }}</h3>
                     <ul>
                         {% for bag in data.sleeping_bags %}
@@ -44,7 +43,6 @@
                 </a>
             {% endif %}   
             </div>
-                {% endif %}
             {% endfor %}
         </div>
     </div>

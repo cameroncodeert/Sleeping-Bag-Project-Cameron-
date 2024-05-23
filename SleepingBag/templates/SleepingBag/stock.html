@@ -7,14 +7,36 @@
 
 {% block body %}
 {% include "Notes/header.html" %}
-<div class="container">
-    <h2>Beschikbare Slaapzakken bij {{ location.name }}</h2>
-    <ul>
-        {% for bag in available_bags %}
-            <li>Slaapzak ID: {{ bag.id }} - Status: {{ bag.status }} - Laatst Gewassen: {{ bag.last_washing_cycle }}</li>
-        {% empty %}
-            <li>Geen beschikbare slaapzakken op deze locatie.</li>
-        {% endfor %}
-    </ul>
-</div>
+
+<section class="section">
+    <div class="container">
+        <h1 class="title">Beschikbare Slaapzakken bij {{ location.name }}</h1>
+        <p class="subtitle">Deze slaapzakken zijn niet gekoppeld aan een deelnemer.</p>
+        <a class="return-button" href="{% url 'landing_page' %}">Terug naar alle deelnemers</a>
+        <div class="columns is-multiline">
+            {% for bag in available_bags %}
+                <div class="column is-one-third">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-header-title">Slaapzak ID: {{ bag.id }}</h3>
+                        </div>
+                        <div class="card-content">
+                            <p class="status-unassigned">Status: Niet gekoppeld aan een deelnemer</p>
+                            <ul>
+                                <li>Status: <span class="tag is-info">{{ bag.status }}</span></li>
+                                <li>Laatst Gewassen: {{ bag.last_washing_cycle }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="column">
+                    <div class="notification is-warning">
+                        Geen beschikbare slaapzakken op deze locatie.
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}

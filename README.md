@@ -1,3 +1,6 @@
+# git Simplified 'Voorraad' link display in header for logged-in users.
+
+pen_spark
 
 
 

@@ -10,9 +10,12 @@
     background-color: #363636;
     color:white;
 }
-h1{
-    color:red;
+h1, h2, h3 {
+    color: rgb(73, 73, 73);
+    font-size: 2em; 
+    margin-bottom: 20px; 
 }
+
 /* General body style */
 body {
     color: #e8231a;
@@ -23,6 +26,7 @@ body {
     max-width: 100%;  /* Ensures that the html and body tags do not extend beyond viewport */
     overflow-x: hidden;  /* Prevents horizontal scrolling at the root level */
 }
+
 header{
     background-color: #ffffff;
 }
@@ -50,10 +54,12 @@ header{
 .card-header {
     background-color: #4a4a4a; /* Darker header for contrast */
     color: #000000;
+    padding: 10px; 
 }
 
 .card-header-title {
     font-size: 1.2em; /* Larger font for headers */
+    margin: 0;
 }
 
 .card-content {
@@ -64,14 +70,20 @@ header{
 }
 
 ul {
-    padding-left: 20px; /* Proper padding for lists */
-    list-style-type: none; /* Removing bullets */
+    padding-left: 20px; 
+    list-style-type: none; 
 }
 
 li {
-    padding: 5px 0; /* Spacing between list items */
+    padding: 5px 0;
+    border-bottom: 1px solid #444; 
+    margin-bottom: 5px; 
 }
 
+.status-unassigned {
+    color: #00d1b2; 
+    font-weight: bold;
+}
 
 
 .participants-grid {
@@ -80,6 +92,14 @@ li {
     justify-content: space-around;
     gap: 20px;
 }
+
+.participant-card.inactive {
+    background-color: #ddd;
+    color: #666;
+    opacity: 0.7; /* Add subtle opacity for visual distinction */
+    border: 1px dashed #aaa; /* Dashed border for inactive */
+}
+
 
 .participant-card {
     background-color: #f9f9f9;
@@ -90,7 +110,6 @@ li {
     color: inherit; 
 }
 
-/* Return button */
 .return-button {
     display: block; 
     width: auto;    
@@ -105,5 +124,5 @@ li {
 }
 
 .return-button:hover {
-    background-color: #363636; /*  background when i hover */
+    background-color: #363636; 
 }
