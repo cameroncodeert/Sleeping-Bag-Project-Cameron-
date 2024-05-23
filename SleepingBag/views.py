@@ -4,6 +4,9 @@ from .models import SleepingBags, Participant, StatusChoice
 from django.utils import timezone
 from SleepingBag.forms import SleepingBagsForm
 from SleepingBag.models import SleepingBags
+from Location.models import Location
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 # user stories
@@ -95,3 +98,25 @@ def update_bag(request, bag_id):
         else:
             print("rerrors", form.errors)
     return HttpResponse("This endpoint requires a POST request.", status=400)
+
+# Our available stock of sleeping bags
+
+from django.shortcuts import render, get_object_or_404
+from .models import SleepingBags
+from Location.models import Location
+from Employee.models import Employee
+
+@login_required
+def stock(request, location_id):
+    employee = Employee.objects.get(user=request.user)
+    location = get_object_or_404(Location, id=location_id)
+    if location != employee.location:
+        return HttpResponse("You do not have permission to view this location's stock.", status=403)
+    
+    available_bags = SleepingBags.objects.filter(location=location, linked_participant__isnull=True)
+
+    context = {
+        'location': location,
+        'available_bags': available_bags,
+    }
+    return render(request, 'SleepingBag/stock.html', context)

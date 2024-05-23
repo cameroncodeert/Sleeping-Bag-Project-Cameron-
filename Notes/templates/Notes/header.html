@@ -15,6 +15,11 @@
                 <a class="navbar-item" href="{% url 'notes:add' %}">
                     Notes
                 </a>
+                {% if employee %}
+                <a class="navbar-item" href="{% url 'bags:stock' location_id=employee.location.id %}">
+                    Vooraad
+                </a>
+                {% endif %}
             </div>
 
             <div class="navbar-end">
@@ -29,3 +34,4 @@
         </div>
     </nav>
 </header>
+

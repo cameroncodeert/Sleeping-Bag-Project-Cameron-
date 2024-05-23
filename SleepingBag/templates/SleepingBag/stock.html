@@ -1,0 +1,20 @@
+{% extends 'Notes/base.html' %}
+{% load static %}
+
+{% block head %}
+<title>Beschikbare Slaapzakken</title>
+{% endblock %}
+
+{% block body %}
+{% include "Notes/header.html" %}
+<div class="container">
+    <h2>Beschikbare Slaapzakken bij {{ location.name }}</h2>
+    <ul>
+        {% for bag in available_bags %}
+            <li>Slaapzak ID: {{ bag.id }} - Status: {{ bag.status }} - Laatst Gewassen: {{ bag.last_washing_cycle }}</li>
+        {% empty %}
+            <li>Geen beschikbare slaapzakken op deze locatie.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
