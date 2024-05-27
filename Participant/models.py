@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from Location.models import Location
 # Create your models here.
 class Participant(models.Model):
@@ -23,21 +24,28 @@ class Participant(models.Model):
         ('social_security_card', 'Socialezekerheidskaart'),
         ('vehicle_registration', 'Kentekenbewijs'),
         ('work_permit', 'Werkvergunning'),
+        ('other','other')
     ]
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     date_of_birth = models.DateField()
     registered_location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField(default=True)
-    document_type = models.CharField(max_length=30, choices=DOCUMENT_TYPES, null=True, blank=True)
+    document_type = models.CharField(max_length=30, choices=DOCUMENT_TYPES) 
     document_date = models.DateField(null=True, blank=True) 
-    custom_document_type = models.CharField(max_length=100, blank=True, null=True)  # New field for custom document type
+    custom_document_type = models.CharField(max_length=100, blank=True, null=True)  
 
-
+    class Meta:
+        unique_together = ['first_name', 'last_name', 'date_of_birth']
     @property
     def full_name(self):
         return self.first_name + " " + self.last_name
 
+    def save(self, *args, **kwargs):
+        if self.document_type=='other' and self.custom_document_type == None:
+            raise ValidationError('A custom document need to be added since it is a document of type other')
+        super(Participant, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.full_name
-   
+    

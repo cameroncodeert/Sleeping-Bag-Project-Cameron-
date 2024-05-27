@@ -1,7 +1,7 @@
 {% extends 'Notes/base.html' %}
 
 {% block head %}
-<title>Voeg Deelnemer Toe</title>
+<title>Voeg Deelnemer Toe aan {{ employee_location_name }}</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock %}
 
@@ -9,10 +9,21 @@
 {% include "Notes/header.html" %}
 <section class="section">
     <div class="container">
-        <h3 class="title is-4">Deelnemer Toevoegen</h3>
+        <h3 class="title is-4">Deelnemer Toevoegen aan {{ employee_location_name }}</h3>
+        {% if errors %}
+        <div class="errorlist">
+            {{ errors }}
+        </div>
+    {% endif %}
         <form method="post" class="box">
             {% csrf_token %}
             {{ form.as_p }}
+            <!-- <div class="field" id="other_document_type_field" style="display: none;">
+                <label class="label">Ander Document Type:</label>
+                <div class="control">
+                    <input class="input" type="text" name="custom_document_type" placeholder="Ander Document Type">
+                </div>
+            </div> -->
             <button type="submit" class="button is-primary">Voeg Deelnemer Toe</button>
         </form>
         <!-- Display available sleeping bags -->
@@ -37,10 +48,21 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Initialize Flatpickr on the date input field
         flatpickr(".datepicker", {
             dateFormat: "Y-m-d",
         });
+        const documentTypeSelect = document.getElementById('id_document_type');
+        const otherDocumentTypeField = document.getElementById('other_document_type_field');
+        
+        documentTypeSelect.addEventListener('change', function() {
+            if (documentTypeSelect.value === 'Other') {
+                otherDocumentTypeField.style.display = 'block';
+            } else {
+                otherDocumentTypeField.style.display = 'none';
+            }
+        });
+
+        documentTypeSelect.dispatchEvent(new Event('change'));
     });
 </script>
 {% endblock %}

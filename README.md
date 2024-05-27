@@ -1,5 +1,7 @@
 # git Simplified 'Voorraad' link display in header for logged-in users.
 
+# git In the file "Participant/add_participant.html", change the title to say "Voeg Deelnemer Toe aan [location name]" and made the locaiton field unchangable
+
 pen_spark
 
 

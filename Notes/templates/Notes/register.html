@@ -45,24 +45,7 @@
                             {% csrf_token %}
                             {{ user_form.as_p }}
                             {{ employee_form.as_p }}
-                            <div class="field">
-                                <label class="label" for="id_document_type">Type Document:</label>
-                                <div class="control">
-                                    {{ participant_form.document_type }}
-                                </div>
-                            </div>
-                            <div class="field" style="display:none;">
-                                <label class="label" for="id_custom_document_type">Ander Document Type:</label>
-                                <div class="control">
-                                    {{ participant_form.custom_document_type }}
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label class="label" for="id_document_date">Datum van het Document:</label>
-                                <div class="control">
-                                    {{ participant_form.document_date }}
-                                </div>
-                            </div>
+                          
                             <div class="field">
                                 <button class="button is-primary is-fullwidth" type="submit">Registreer</button>
                             </div>

@@ -71,25 +71,32 @@ def participant_detail(request, id):
 
     return render(request, 'Participant/participant_detail.html', context)
 
+
+from .forms import ParticipantForm2
 @login_required
 def add_participant(request):
     if not request.user.employee.can_manage_participants:
         return redirect('landing_page')
 
     employee_location = request.user.employee.location
-
+    available_sleeping_bags = SleepingBags.objects.filter(
+        location=employee_location,
+        linked_participant__isnull=True,
+        is_in_facility=True
+    )
     if request.method == 'POST':
-        form = ParticipantForm(request.POST, employee_location=employee_location)
+        form = ParticipantForm2(request.POST, employee_location=employee_location)
+        print("form", form)
         if form.is_valid():
-            participant = form.save(commit=False)
-            participant.is_active = True
+            print('is valide')
+            participant = form.save()
+            # participant.is_active = True
 
-            # Check for custom document type
-            if form.cleaned_data['document_type'] == 'other':
-                participant.document_type = form.cleaned_data['custom_document_type']
-            participant.save()
+            # if form.cleaned_data['document_type'] == 'other':
+            #     participant.document_type = form.cleaned_data['custom_document_type']
+            # participant.save()
 
-            # Assign the first sleeping bag
+            # Assign thve first sleeping bag
             sleeping_bag_1 = form.cleaned_data['sleeping_bag_1']
             if sleeping_bag_1:
                 sleeping_bag_1.linked_participant = participant
@@ -102,20 +109,24 @@ def add_participant(request):
                 sleeping_bag_2.linked_participant = participant
                 sleeping_bag_2.is_in_facility = False
                 sleeping_bag_2.save()
+        else:
+            # print('errors',form.errors)
 
-            return redirect('landing_page')
+           render(request, 'Participant/add_participant.html', {
+        'form': form,
+        "errors": form.errors,
+        'available_sleeping_bags': available_sleeping_bags,
+        'employee_location_name': request.user.employee.location.name,
+    })
     else:
-        form = ParticipantForm(employee_location=employee_location)
+        form = ParticipantForm2(employee_location=employee_location)
 
-    available_sleeping_bags = SleepingBags.objects.filter(
-        location=employee_location,
-        linked_participant__isnull=True,
-        is_in_facility=True
-    )
+    
 
     return render(request, 'Participant/add_participant.html', {
         'form': form,
-        'available_sleeping_bags': available_sleeping_bags
+        'available_sleeping_bags': available_sleeping_bags,
+        'employee_location_name': request.user.employee.location.name,
     })
 
 @login_required

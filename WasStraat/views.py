@@ -3,12 +3,31 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
+from django import forms
 from Employee.models import Employee
+from django.contrib.auth.models import User
 
 class EmployeeForm(ModelForm):
     class Meta:
         model = Employee
-        fields = ['user', 'position', 'location', 'can_manage_participants']
+        fields = ['position', 'location']
+
+class CustomUserCreationForm(UserCreationForm):
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        if commit:
+            user.save()
+        return user
+
 
 
 @login_required
@@ -33,10 +52,11 @@ from Participant.forms import ParticipantForm
 
 def register_user(request):
     if request.method == "POST":
-        user_form = UserCreationForm(request.POST)
+        user_form = CustomUserCreationForm(request.POST)
         employee_form = EmployeeForm(request.POST)
 
         if user_form.is_valid() and employee_form.is_valid():
+            print('hello world')
             user = user_form.save()
             employee = employee_form.save(commit=False)
             employee.user = user
@@ -49,11 +69,11 @@ def register_user(request):
             return render(request, "Notes/register.html", {
                 "user_form": user_form,
                 "employee_form": employee_form,
-                "errors": user_form.errors + employee_form.errors
+                "errors": {**user_form.errors,  **employee_form.errors}
             })
 
     else:
-        user_form = UserCreationForm()
+        user_form = CustomUserCreationForm()
         employee_form = EmployeeForm()
 
     return render(request, "Notes/register.html", {
