@@ -42,7 +42,7 @@ class ParticipantForm2(forms.ModelForm):
             self.fields['registered_location'].initial = employee_location 
             available_bags = SleepingBags.objects.filter(
                 location=employee_location,
-                linked_participant__isnupll=True,
+                linked_participant__isnull=True,
                 is_in_facility=True
             )
             self.fields['sleeping_bag_1'].queryset = available_bags

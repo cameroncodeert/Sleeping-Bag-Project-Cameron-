@@ -3,6 +3,7 @@
 
 {% block head %}
 <title>Uw Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
 
 {% block body %}
@@ -18,6 +19,41 @@
             <a href="{% url 'participants:add_participant' %}" class="button is-primary">Deelnemer Toevoegen</a>
         </div>
         {% endif %}
+
+        <pre>
+        {% for bag in unwashed_bags %}
+                {{ bag.id }} - {{ bag.linked_participant }}
+        {% endfor %}
+        </pre>
+            
+
+        <!-- Sleeping Bags to Wash -->
+        <h2 class="subtitle" style="margin-top: 40px;"><span class="icon"><i class="fas fa-washing-machine"></i></span> Slaapzakken die gewassen moeten worden:</h2>
+        <p>Hieronder ziet u een lijst van slaapzakken die gewassen moeten worden. Klik op "Markeer als gewassen" nadat u een slaapzak heeft gewassen.</p>
+        <ul>
+            {% for bag in unwashed_bags %}
+            <li>
+                <span style="font-weight: bold;">Slaapzak ID:</span> {{ bag.id }} 
+                <p>Deelnemer: 
+                    {% if bag.linked_participant %}
+                        {{ bag.linked_participant.full_name }}
+                    {% else %}
+                        Geen deelnemer
+                    {% endif %}
+                    - Status: 
+                    {% if bag.status == 'Good' %}
+                        <span class="icon has-text-danger"><i class="fas fa-exclamation-triangle"></i></span>
+                    {% elif bag.status == 'Damaged' %}
+                        <span class="icon has-text-warning"><i class="fas fa-exclamation-circle"></i></span>
+                    {% else %}
+                        <span class="icon has-text-info"><i class="fas fa-info-circle"></i></span>
+                    {% endif %}
+                </p>
+                <a href="{% url 'bags:wash_now' bag.id %}" class="button is-medium is-primary" onclick="return confirm('Weet u zeker dat u de slaapzak wilt wassen?');">Wassen</a>
+            </li>
+            {% endfor %}
+        </ul>
+
 
         <!-- Active Participants -->
         <div class="participants-grid">

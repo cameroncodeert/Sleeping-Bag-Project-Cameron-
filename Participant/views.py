@@ -29,12 +29,25 @@ def dashboard_view(request):
             'sleeping_bags': sleeping_bags
         })
 
+    unwashed_bags = SleepingBags.objects.filter(
+        location=employee.location,
+        is_washed=False
+    ).select_related('linked_participant')
+
+
+    print("Employee:", employee)
+    print("Location:", employee.location)
+    print("Unwashed Bags:", unwashed_bags)
+    
+    for bag in unwashed_bags:
+        print(f"Bag ID: {bag.id}, Participant: {bag.linked_participant}, Status: {bag.status}, Location: {bag.location}")
+
     context = {
         'employee': employee,
-        'participant_data': participant_data
+        'participant_data': participant_data,
+        'unwashed_bags': unwashed_bags  
     }
     return render(request, 'Notes/landing_page.html', context)
-
 
 @login_required
 def participant_detail(request, id):
