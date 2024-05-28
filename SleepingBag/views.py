@@ -94,7 +94,7 @@ def update_bag(request, bag_id):
         form = SleepingBagsForm(request.POST, instance=bag)            
         if form.is_valid():                
             form.save()                        
-            return redirect('Participant:participant_details', id=bag.linked_participant.pk)
+            return redirect('participants:participant_details', id=bag.linked_participant.pk)
         else:
             print("rerrors", form.errors)
     return HttpResponse("This endpoint requires a POST request.", status=400)
