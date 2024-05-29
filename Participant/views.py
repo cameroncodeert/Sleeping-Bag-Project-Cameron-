@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from Participant.models import Participant
 from SleepingBag.models import SleepingBags
 from .forms import ParticipantForm
@@ -122,6 +123,8 @@ def add_participant(request):
                 sleeping_bag_2.linked_participant = participant
                 sleeping_bag_2.is_in_facility = False
                 sleeping_bag_2.save()
+            messages.success(request, 'Deelnemer succesvol toegevoegd!')
+            return HttpResponseRedirect(reverse('participants:add_participant')) 
         else:
             # print('errors',form.errors)
 
