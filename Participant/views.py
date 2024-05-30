@@ -11,9 +11,9 @@ from Notes.models import Note
 from django.forms import ModelForm
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from Notes.views import NoteForm
-from Notes.forms import NoteForm
-from SleepingBag.forms import SleepingBagsForm, SleepingBagsCustomForm
+# from Notes.views import NoteForm
+from Notes.forms import NoteFormHiddenParticipant as NoteForm
+from SleepingBag.forms import SleepingBagsForm, SleepingBagsCustomForm 
 
 
 
@@ -59,14 +59,14 @@ def participant_detail(request, id):
 
     employee = request.user.employee
     if request.method == 'POST':
-        form = NoteForm(request.POST)
+        form = NoteForm(request.POST, participant=participant)
         if form.is_valid():
             note = form.save(commit=False)
             note.employee = employee
             note.save()
             return HttpResponseRedirect(reverse('participant_detail', args=[id]))  # Redirect to clear the form
     else:
-        note_form = NoteForm(initial={'participant': participant}) 
+        note_form = NoteForm(participant= participant) 
 
     new_notes = Note.objects.filter(participant=participant).order_by('-date')  # Order notes by date
 

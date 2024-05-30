@@ -4,6 +4,7 @@ from Employee.models import Employee
 from .forms import NoteForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
 # Create your views here.
 
 #class NoteForm(forms.Form): 
@@ -23,28 +24,31 @@ def manage_note(request):
     referer = request.META.get('HTTP_REFERER')
     if request.method=='POST':          
         # next_url = request.POST.get('next')
+        # request.POST.remove('csrfmiddlewaretoken')
         form = NoteForm(request.POST)
-        print('referrer',referer)
+        # print('referrer',referer)
         # print('next url', next_url)
+        print("data", form.data)
         if form.is_valid():
-            print('is vlai')
+            print('is valid')
             note = form.save(commit=False)          
             note.employee = employee
             note.save()
             if referer:
-                redirect(referer)
+                
+                return redirect(referer)
+                # HttpResponseRedirect(referer)
+        else:
+            print('errors', form.errors)
 
-    # selct where first_condition AND second condition
-    # 1) get the employee currently logged in 
-    # print('employee location', type(employee.location))
 
     # filter new_notes to only return notes WITH a participant AND that are from the user location
     new_notes = Note.objects.filter(participant__isnull=False)
-    new_notes = new_notes.filter(participant__registered_location= employee.location)
+    new_notes = new_notes.filter(participant__registered_location= employee.location).order_by('-date')
     
     #reversed list
-    display_notes = list(new_notes)[::-1]
-
+    # display_notes = list(new_notes)[::-1]
+    display_notes= new_notes
     #new_notes= Note.objects.exclude(participant__is_null)True)
     form = NoteForm()
     context = {"new_notes": display_notes, 'form':form}
@@ -54,17 +58,3 @@ def manage_note(request):
         # Return an 'invalid login' error message.
 
 
-# class RegisterForm(UserCreationForm):
-#     class Meta:
-#         model = Employee
-#         fields = ["username", "email", "password"]
-
-# def register_user(request):
-#     if request.method == 'POST':
-#         form = RegisterForm(request.POST)
-#         if form.is_valid():
-#             user = form.save() 
-#             username = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password')
-#             user = authenticate(username=username, password=password)
-#             #todo

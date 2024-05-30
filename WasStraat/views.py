@@ -24,6 +24,7 @@ class CustomUserCreationForm(UserCreationForm):
         user = super().save(commit=False)
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        user.is_active=False
         if commit:
             user.save()
         return user
@@ -39,9 +40,11 @@ def login_user(request):
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
+                    
         if user is not None:
-
             login(request, user)
+        if User.objects.filter(username=username, is_active=False):
+            return render(request, "Notes/login.html", context={"errors": "You are not yet activated"})
         return redirect('/')
     else:
         return render(request, "Notes/login.html")

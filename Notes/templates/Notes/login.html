@@ -26,6 +26,8 @@
                 <div class="column is-one-third"> 
                     <div class="login-container">
                         <h2 class="title is-2 login-title">Welkom Terug!</h2>
+                    {%if errors%}
+                    {{errors}}{%endif%}
 
                         <form action="/login/" method="POST">
                             {% csrf_token %} 

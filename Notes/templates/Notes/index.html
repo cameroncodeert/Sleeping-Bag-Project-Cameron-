@@ -21,20 +21,52 @@
                     <button class="button is-link" type="submit">Submit</button>
                 </div>
                 <!-- terug naar deelnemers knop -->
-                <div class="section">
-                    <div class="container">
-                        <a href="{% url 'landing_page' %}" class="return-button">Terug naar alle deelnemers</a>
-                    </div>
-                </div>
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+                
             </form>
+            <div class="section">
+                <div class="container">
+                    <a href="{% url 'landing_page' %}" class="return-button">Terug naar alle deelnemers</a>
+                </div>
+            </div>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-            <h2 class="subtitle">Existing Notes are:</h2>
+            {% load tz %}
+            {% get_current_timezone as TIME_ZONE %}
+            {% now "Y-m-d" as today_date %}
+            
+            <h2 class="subtitle">Notities vandaag gemaakt:</h2>
+            
+            <div class="content">
+                <ul>
+                    {% for note in new_notes %}
+                        {% if note.date|date:"Y-m-d" == today_date %}
+                            <li class="note-item">
+                                <div>{{ note.note }}</div>
+                                <div class="note-meta">
+                                    <span>About: {{ note.participant.first_name }}</span>
+                                    <span>By: {{ note.employee }}</span>
+                                    <span>Gemaakt op: {{ note.date|date:"F d, Y" }}</span>
+                                </div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    </ul>
+            </div>
+            
+            <h2 class="subtitle">Oudere notities: </h2>
             <div class="content">
                 <ul>
                 {% for note in new_notes %}
-                    <li>{{ note.note }} by: {{ note.employee }} - gemaakt op {{ note.date|date:"F d, Y" }}</li>
+                    {% if note.date|date:"Y-m-d" != today_date %}
+                        <li class="note-item">
+                            <div>{{ note.note }}</div>
+                            <div class="note-meta">
+                                <span>About: {{ note.participant.first_name }}</span>
+                                <span>By: {{ note.employee }}</span>
+                                <span>Gemaakt op: {{ note.date|date:"F d, Y" }}</span>
+                            </div>
+                        </li>
+                    {% endif %}
                 {% endfor %}
                 </ul>
             </div>

@@ -7,7 +7,7 @@ class Note(models.Model):
     note = models.TextField(max_length=500)
     # automatically the date field when the instance
     # auto_now will update the date everytime the instance is saved (last_time_updated)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
     participant = models.ForeignKey(Participant,on_delete=models.SET_NULL, null=True)
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True)
     #EmployeeID foreigkey 
