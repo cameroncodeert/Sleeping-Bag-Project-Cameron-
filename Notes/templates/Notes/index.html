@@ -36,41 +36,41 @@
             
             <h2 class="subtitle">Notities vandaag gemaakt:</h2>
             
-            <div class="content">
+            <div class="content notes">
                 <ul>
                     {% for note in new_notes %}
                         {% if note.date|date:"Y-m-d" == today_date %}
                             <li class="note-item">
-                                <div>{{ note.note }}</div>
+                                <div class="note-content">{{ note.note }}</div>
                                 <div class="note-meta">
-                                    <span>About: {{ note.participant.first_name }}</span>
-                                    <span>By: {{ note.employee }}</span>
-                                    <span>Gemaakt op: {{ note.date|date:"F d, Y" }}</span>
+                                    <span>Betreft: <strong>{{ note.participant.first_name }}</strong></span>
+                                    <span>Geschreven door: <strong>{{ note.employee }}</strong></span>
+                                    <span>Gemaakt op: <strong>{{ note.date|date:"F d, Y" }}</strong></span>
                                 </div>
                             </li>
                         {% endif %}
                     {% endfor %}
-                    </ul>
-            </div>
-            
-            <h2 class="subtitle">Oudere notities: </h2>
-            <div class="content">
-                <ul>
-                {% for note in new_notes %}
-                    {% if note.date|date:"Y-m-d" != today_date %}
-                        <li class="note-item">
-                            <div>{{ note.note }}</div>
-                            <div class="note-meta">
-                                <span>About: {{ note.participant.first_name }}</span>
-                                <span>By: {{ note.employee }}</span>
-                                <span>Gemaakt op: {{ note.date|date:"F d, Y" }}</span>
-                            </div>
-                        </li>
-                    {% endif %}
-                {% endfor %}
                 </ul>
             </div>
-        </div>
+            
+            <h2 class="subtitle">Oudere notities:</h2>
+            <div class="content notes">
+                <ul>
+                    {% for note in new_notes %}
+                        {% if note.date|date:"Y-m-d" != today_date %}
+                            <li class="note-item">
+                                <div class="note-content">{{ note.note }}</div>
+                                <div class="note-meta">
+                                    <span>Betreft: <strong>{{ note.participant.first_name }}</strong></span>
+                                    <span>Geschreven door: <strong>{{ note.employee }}</strong></span>
+                                    <span>Gemaakt op: <strong>{{ note.date|date:"F d, Y" }}</strong></span>
+                                </div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+    
     </section>
 </body>
 </html>

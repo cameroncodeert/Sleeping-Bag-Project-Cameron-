@@ -32,17 +32,42 @@
             <div class="card-content">
                 <ul>
                     {% for bag, form in bags_forms_ext %}
-                    
-                    <form method="POST" action="{% url 'bags:update' bag.pk %}">
-                        {% csrf_token %}
-                        <p>Slaapzak nummer: : {{ bag.pk}}</p>
-                        <p>Laatst Gewassen: : {{ bag.last_washing_cycle }}</p>
-                        {{ form }}
-                        <button class="button" type="submit">Update</button>
-                    </form>
+                    <li>
+                        <form method="POST" action="{% url 'bags:update' bag.pk %}">
+                            {% csrf_token %}
+                            <p>Slaapzak nummer: {{ bag.pk }}</p>
+                            <p>Laatst Gewassen: {{ bag.last_washing_cycle }}</p>
+                            {{ form }}
+                            <button class="button" type="submit">Update</button>
+                        </form>
+                        <div class="card-container">
+                            <input type="checkbox" class="is-in-facility" {% if bag.is_in_facility %}checked{% endif %}>
+                            <div class="card-flip">
+                                <div class="card-front">
+                                    <i class="fas fa-home"></i> <p>In Facility</p> 
+                                </div>
+                                <div class="card-back">
+                                    <i class="fas fa-walking"></i> <p>Not in Facility</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-container">
+                            <input type="checkbox" class="is-clean" {% if bag.is_washed %}checked{% endif %}>
+                            <div class="card-flip">
+                                <div class="card-front">
+                                    <i class="fas fa-mud"></i> <p>Dirty</p>
+                                </div>
+                                <div class="card-back">
+                                    <i class="fas fa-hand-sparkles"></i> <p>Clean</p>
+                                </div>
+                            </div>
+                        </div>                        
+                    </li>
                     {% empty %}
                     <li>Geen slaapzakken gevonden.</li>
                     {% endfor %}
+                    
                 </ul>
                 
                 <!-- <a href="{% url 'bags:swap_bag' participant.id %}"
@@ -93,14 +118,46 @@
                     </div>
                 </form>
 
-                <h2 class="subtitle">Recente Notities:</h2>
-                <div class="content">
-                    <ul>
-                        {% for note in new_notes %}
-                            <li>{{ note.note }} by: {{ note.employee }} - gemaakt op {{ note.date|date:"F d, Y" }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                {% load tz %}
+            {% get_current_timezone as TIME_ZONE %}
+            {% now "Y-m-d" as today_date %}
+            
+            <h2 class="subtitle">Notities vandaag gemaakt:</h2>
+            
+            <div class="content notes">
+                <ul>
+                    {% for note in new_notes %}
+                        {% if note.date|date:"Y-m-d" == today_date %}
+                            <li class="note-item">
+                                <div class="note-content">{{ note.note }}</div>
+                                <div class="note-meta">
+                                    <span>Betreft: <strong>{{ note.participant.first_name }}</strong></span>
+                                    <span>Geschreven door: <strong>{{ note.employee }}</strong></span>
+                                    <span>Gemaakt op: <strong>{{ note.date|date:"F d, Y" }}</strong></span>
+                                </div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <h2 class="subtitle">Oudere notities:</h2>
+            <div class="content notes">
+                <ul>
+                    {% for note in new_notes %}
+                        {% if note.date|date:"Y-m-d" != today_date %}
+                            <li class="note-item">
+                                <div class="note-content">{{ note.note }}</div>
+                                <div class="note-meta">
+                                    <span>Betreft: <strong>{{ note.participant.first_name }}</strong></span>
+                                    <span>Geschreven door: <strong>{{ note.employee }}</strong></span>
+                                    <span>Gemaakt op: <strong>{{ note.date|date:"F d, Y" }}</strong></span>
+                                </div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
             </div>
         </div>
     </div>
@@ -187,6 +244,19 @@ $(document).ready(function() {
         });
     });
 });
+
+document.querySelectorAll('.is-in-facility, .is-clean').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        const cardFlip = this.nextElementSibling;
+        cardFlip.style.transition = 'transform 0.6s';
+        if (this.checked) {
+            cardFlip.style.transform = 'rotateY(180deg)';
+        } else {
+            cardFlip.style.transform = 'rotateY(0deg)';
+        }
+    });
+});
+
 </script>
 {% endblock %}
 
