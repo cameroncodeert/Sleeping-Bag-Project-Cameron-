@@ -20,15 +20,15 @@
         </div>
         {% endif %}
 
-        <pre>
+        <!-- <pre>
         {% for bag in unwashed_bags %}
                 {{ bag.id }} - {{ bag.linked_participant }}
         {% endfor %}
         </pre>
-            
+             -->
 
         <!-- Sleeping Bags to Wash -->
-        <h2 class="subtitle" style="margin-top: 40px;"><span class="icon"><i class="fas fa-washing-machine"></i></span> Slaapzakken die gewassen moeten worden:</h2>
+        <!-- <h2 class="subtitle" style="margin-top: 40px;"><span class="icon"><i class="fas fa-washing-machine"></i></span> Slaapzakken die gewassen moeten worden:</h2>
         <p>Hieronder ziet u een lijst van slaapzakken die gewassen moeten worden. Klik op "Markeer als gewassen" nadat u een slaapzak heeft gewassen.</p>
         <ul>
             {% for bag in unwashed_bags %}
@@ -52,7 +52,7 @@
                 <a href="{% url 'bags:wash_now' bag.id %}" class="button is-medium is-primary" onclick="return confirm('Weet u zeker dat u de slaapzak wilt wassen?');">Wassen</a>
             </li>
             {% endfor %}
-        </ul>
+        </ul> -->
 
 
         <!-- Active Participants -->
@@ -70,15 +70,6 @@
                                 {% endfor %}
                             </ul>
                         </a>
-                        {% if employee.can_manage_participants %}
-                        <button class="button is-small is-danger"
-                                onclick="return confirm('Weet u zeker dat u deze deelnemer wilt verwijderen?') && confirm('Deze actie kan niet ongedaan worden gemaakt. Wilt u doorgaan?');"
-                                style="padding:0.5rem 1rem;">  
-                            <span class="icon is-small">
-                                <i class="fas fa-trash"></i>
-                            </span>
-                        </button>
-                    {% endif %}
                     
                     </div>
                 {% endif %}

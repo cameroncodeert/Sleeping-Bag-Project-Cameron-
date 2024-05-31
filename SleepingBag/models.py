@@ -1,14 +1,21 @@
 from django.db import models
 from Location.models import Location
 from Participant.models import Participant
+from django.db.models import Case, When
 
-# Enumeration for the sleepign bag status choices
+
 class StatusChoice(models.TextChoices):
     GOOD = 'Good', 'Goed'
     DAMAGED = 'Damaged', 'Beschadigd'
     LOST = 'Lost', 'Verloren'
-    BAD = 'Bad', 'Slecht'  
 
+custom_ordering = Case(
+    When(status=StatusChoice.GOOD, then=0),
+    When(status=StatusChoice.DAMAGED, then=1),
+    When(status=StatusChoice.LOST, then=2),
+    default=3  # In case there's a status not defined in StatusChoice, put it at the end
+)
+# Enumeration for the sleepign bag status choices
 
 class SleepingBags(models.Model):
     status = models.CharField(choices=StatusChoice.choices, max_length=10, verbose_name="Status")

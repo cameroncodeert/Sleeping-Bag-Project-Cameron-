@@ -8,31 +8,48 @@
     <div class="column is-one-third">
         <div class="card">
             <header class="card-header">
-                <p class="card-header-title">
-                    Cliënt: {{ participant.full_name }}
-                </p>
+                <div class="card-header-title-container">
+                    <span class="icon user-icon"><i class="fas fa-user"></i></span>
+                    <p class="card-header-title">
+                       Deelnemer: {{ participant.full_name }}
+                    </p>
+                    </div>
+                    
+                    
+                
             </header>
             <div class="card-content">
                 <div class="content">
                     <strong>Locatie::</strong> {{ participant.registered_location.name }}<br>
                     <strong>Geboortedatum:</strong> {{ participant.date_of_birth|date:"Y-m-d" }}
                 </div>
+                {% if employee.can_manage_participants %}
+                <button class="button btn-warning"
+                    onclick="return confirm('Weet u zeker dat u deze deelnemer wilt verwijderen?') && confirm('Deze actie kan niet ongedaan worden gemaakt. Wilt u doorgaan?');"
+                    style="padding:0.5rem 1rem;">  
+                <span class="icon is-small">
+                    <i class="fas fa-trash"></i>
+                </span>
+                &nbsp; Verwijder Deelnemer
+                </button>
+                {% endif %}
             </div>
-        </div>
+            </div>
     </div>
 
     <!-- Status vd Slaapzakken -->
     <div class="column">
         <div class="card">
-            <header class="card-header">
-                <p class="card-header-title">
+            <header class="card-header" style="background-color: #f3f7fa;">
+                <p class="card-header-title" style="color:#082d3d;" >
                     Slaapzakken
                 </p>
             </header>
-            <div class="card-content">
+            <div class="card-content" style="background-color:#f1f3ff;">
                 <ul>
+                    <h2 class="subtitle">Beschikbare Slaapzakken:</h2>
                     {% for bag, form in bags_forms_ext %}
-                    <li>
+                    <li class="bag-card {% if not bag.status == 'Good' %}bg-yellow {%endif%}">
                         <form method="POST" action="{% url 'bags:update' bag.pk %}">
                             {% csrf_token %}
                             <p>Slaapzak nummer:</p><span class="bag-id">{{ bag.pk }}</span>
@@ -40,22 +57,25 @@
                             {{ form }}
                             <button class="button update" type="submit">Update</button>
                         </form>
+                        {% if bag.status == "Good" %}
                         <div class="button-wrapper" data-name="is_washed" role='button'>
                             <input type="checkbox"  style="display: none;" {% if bag.is_washed %}checked{% endif %}>
                             {% if bag.is_washed %}
                             <i class="fas fa-hand-sparkles" style="margin-right: 5px;"></i> <p style="margin: 0;">Slaapzak is gewassen</p>
                             {%else %}
-                            <i class="fas fa-broom" style="margin-right: 5px;"></i> <p style="margin: 0;">Slaapzak is toe aan een wasbeurt </p> 
+                            <i class="fas fa-broom" style="margin-right: 5px;"></i> <p style="margin: 0;">Wasbeurt nodig</p> 
                             {%endif%}
                         </div>
                         <div class="button-wrapper left-margin" data-name="is_in_facility" role='button' >
                             <input type="checkbox"  style="display: none;" {% if bag.is_in_facility %}checked{% endif %}>
                             {% if bag.is_in_facility %}
-                            <i class="fas fa-home" style="margin-right: 5px;"></i> <p style="margin: 0;">In Facility</p>
+                            <i class="fas fa-home" style="margin-right: 5px;"></i> <p style="margin: 0;">Is op locatie</p>
                             {%else %}
-                            <i class="fas fa-walking" style="margin-right: 5px;"></i> <p style="margin: 0;">Not In Facility</p> 
+                            <i class="fas fa-walking" style="margin-right: 5px;"></i> <p style="margin: 0;">Met de gebruiker</p> 
                             {%endif%}
                         </div>
+                        {%else%}
+                        {%endif%}
                     </li>
                         {% empty %}
                         <li>Geen slaapzakken gevonden.</li>

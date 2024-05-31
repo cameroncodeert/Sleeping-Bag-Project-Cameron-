@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from Participant.models import Participant
-from SleepingBag.models import SleepingBags
+from SleepingBag.models import SleepingBags, custom_ordering
 from .forms import ParticipantForm
 from Employee.models import Employee
 from django.contrib.auth.models import User
@@ -53,7 +53,7 @@ def dashboard_view(request):
 @login_required
 def participant_detail(request, id):
     participant = get_object_or_404(Participant, pk=id)
-    sleeping_bags = SleepingBags.objects.filter(linked_participant=participant)
+    sleeping_bags = SleepingBags.objects.filter(linked_participant=participant).order_by(custom_ordering)
     bags_forms = [SleepingBagsForm(instance=sleeping_bag) for sleeping_bag in sleeping_bags]
     bags_forms_ext = zip(sleeping_bags, bags_forms)
 
@@ -75,7 +75,8 @@ def participant_detail(request, id):
         'sleeping_bags': sleeping_bags,
         'note_form': note_form,
         'new_notes': new_notes,
-        'bags_forms_ext': bags_forms_ext
+        'bags_forms_ext': bags_forms_ext,
+        "employee":employee
     }
 
     # Add 'my_form' to context only if 'bags_forms' is not empty so that we can also click on Participants
