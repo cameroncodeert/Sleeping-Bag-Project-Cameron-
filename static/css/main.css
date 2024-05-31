@@ -224,9 +224,14 @@ li {
     flex-wrap: wrap;
     justify-content: space-around;
     gap: 20px;
+    position: relative;
 }
 
-
+.delete-button {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+}
 
 .participant-card {
     background-color: #f9f9f9;
@@ -236,6 +241,7 @@ li {
     width: 300px; 
     color: inherit; 
 }
+
 
 .return-button {
     display: block; 
@@ -264,7 +270,13 @@ li {
     background-color: #ccc;
     border-color: #ccc;
 }
-.card-container {
+
+.bag-id {
+    font-size: 1.2em;     
+    font-weight: bold;   
+}
+
+/* .card-container {
     perspective: 1000px;
     display: inline-block;
     margin: 10px;
@@ -306,4 +318,20 @@ li {
 .card-container .is-in-facility,
 .card-container .is-clean {
     display: none;
+} */
+
+.button-wrapper {
+    display: inline-flex;
+    align-items: center;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: red;
+}
+.left-margin {
+    margin-left: 20px;
+}
+.button-wrapper:has(input[type="checkbox"]:checked) {
+    background-color: green;
 }

@@ -71,12 +71,15 @@
                             </ul>
                         </a>
                         {% if employee.can_manage_participants %}
-                            <a href="{% url 'participants:remove_participant' participant_id=data.participant.id %}"
-                                class="button is-danger"
-                                onclick="return confirm('Weet u zeker dat u deze deelnemer wilt verwijderen?') && confirm('Deze actie kan niet ongedaan worden gemaakt. Wilt u doorgaan?');">
-                                Verwijder Deelnemer
-                            </a>
-                        {% endif %}
+                        <button class="button is-small is-danger"
+                                onclick="return confirm('Weet u zeker dat u deze deelnemer wilt verwijderen?') && confirm('Deze actie kan niet ongedaan worden gemaakt. Wilt u doorgaan?');"
+                                style="padding:0.5rem 1rem;">  
+                            <span class="icon is-small">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </button>
+                    {% endif %}
+                    
                     </div>
                 {% endif %}
             {% endfor %}

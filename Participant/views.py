@@ -53,7 +53,7 @@ def dashboard_view(request):
 @login_required
 def participant_detail(request, id):
     participant = get_object_or_404(Participant, pk=id)
-    sleeping_bags = SleepingBags.objects.filter(linked_participant=participant).order_by('-is_washed')
+    sleeping_bags = SleepingBags.objects.filter(linked_participant=participant)
     bags_forms = [SleepingBagsForm(instance=sleeping_bag) for sleeping_bag in sleeping_bags]
     bags_forms_ext = zip(sleeping_bags, bags_forms)
 

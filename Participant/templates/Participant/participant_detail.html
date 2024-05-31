@@ -35,47 +35,41 @@
                     <li>
                         <form method="POST" action="{% url 'bags:update' bag.pk %}">
                             {% csrf_token %}
-                            <p>Slaapzak nummer: {{ bag.pk }}</p>
+                            <p>Slaapzak nummer:</p><span class="bag-id">{{ bag.pk }}</span>
                             <p>Laatst Gewassen: {{ bag.last_washing_cycle }}</p>
                             {{ form }}
-                            <button class="button" type="submit">Update</button>
+                            <button class="button update" type="submit">Update</button>
                         </form>
-                        <div class="card-container">
-                            <input type="checkbox" class="is-in-facility" {% if bag.is_in_facility %}checked{% endif %}>
-                            <div class="card-flip">
-                                <div class="card-front">
-                                    <i class="fas fa-home"></i> <p>In Facility</p> 
-                                </div>
-                                <div class="card-back">
-                                    <i class="fas fa-walking"></i> <p>Not in Facility</p>
-                                </div>
-                            </div>
+                        <div class="button-wrapper" data-name="is_washed" role='button'>
+                            <input type="checkbox"  style="display: none;" {% if bag.is_washed %}checked{% endif %}>
+                            {% if bag.is_washed %}
+                            <i class="fas fa-hand-sparkles" style="margin-right: 5px;"></i> <p style="margin: 0;">Slaapzak is gewassen</p>
+                            {%else %}
+                            <i class="fas fa-broom" style="margin-right: 5px;"></i> <p style="margin: 0;">Slaapzak is toe aan een wasbeurt </p> 
+                            {%endif%}
                         </div>
-                        
-                        <div class="card-container">
-                            <input type="checkbox" class="is-clean" {% if bag.is_washed %}checked{% endif %}>
-                            <div class="card-flip">
-                                <div class="card-front">
-                                    <i class="fas fa-mud"></i> <p>Dirty</p>
-                                </div>
-                                <div class="card-back">
-                                    <i class="fas fa-hand-sparkles"></i> <p>Clean</p>
-                                </div>
-                            </div>
-                        </div>                        
+                        <div class="button-wrapper left-margin" data-name="is_in_facility" role='button' >
+                            <input type="checkbox"  style="display: none;" {% if bag.is_in_facility %}checked{% endif %}>
+                            {% if bag.is_in_facility %}
+                            <i class="fas fa-home" style="margin-right: 5px;"></i> <p style="margin: 0;">In Facility</p>
+                            {%else %}
+                            <i class="fas fa-walking" style="margin-right: 5px;"></i> <p style="margin: 0;">Not In Facility</p> 
+                            {%endif%}
+                        </div>
                     </li>
-                    {% empty %}
-                    <li>Geen slaapzakken gevonden.</li>
-                    {% endfor %}
-                    
-                </ul>
+                        {% empty %}
+                        <li>Geen slaapzakken gevonden.</li>
+                        {% endfor %}
+                        
+                    </ul>
+                    <a href="javascript:void(0);" class="btn btn-primary swap-button" data-participant-id="{{ participant.id }}">
+                        <button class="button is-link">Slaapzakken omruilen</button></a>
+                </div>
                 
                 <!-- <a href="{% url 'bags:swap_bag' participant.id %}"
                  class="btn btn-primary" >
                     <button class="button is-link">Slaapzakken omruilen</button></a> -->
                 
-                <a href="javascript:void(0);" class="btn btn-primary swap-button" data-participant-id="{{ participant.id }}">
-                    <button class="button is-link">Slaapzakken omruilen</button></a>
                 <!-- Swap Button, rendered conditionnaly if we have two sleeping bags, one sleeping is dirty and the other one is clean and in the facility -->
                 <!-- {% with bag_1=bags_forms_ext.0%}
                  <p>{{bags_forms_ext.0.0.is_washed}}</p> -->
@@ -141,7 +135,7 @@
                 </ul>
             </div>
             
-            <h2 class="subtitle">Oudere notities:</h2>
+            <h2 class="subtitle">Eerder gemaakte notities:</h2>
             <div class="content notes">
                 <ul>
                     {% for note in new_notes %}
@@ -174,6 +168,25 @@
 
 <script>
 $(document).ready(function() {
+    $('.button-wrapper').click(function(){
+        // change the checked status of the current checkbox
+        const form = $(this).siblings().first().get(0)
+        // var checkbox = form.find('.is-in-facility'); 
+        // # var checkbox = $(this).siblings('input.is-in-facility');
+
+        const fieldToChange = $(this).data('name')
+        // console.log('here')
+        const inputToChange = form.querySelector(`input[type="checkbox"][name="${fieldToChange}"]`)
+        // console.log("input", inputToChange)
+        inputToChange.checked = !inputToChange.checked
+
+
+        // press the update button
+        const updateButton = form.querySelector('.update')
+        updateButton.click()
+        updateButton.disabled = true
+    })
+    
     $('.swap-button').click(function() {
         var participantId = $(this).data('participant-id');
         var ajaxUrl = `{% url 'bags:swap_bag' 0 %}`.replace('0', participantId);
@@ -244,10 +257,12 @@ $(document).ready(function() {
         });
     });
 });
+console.log(document.querySelectorAll('.is-in-facility, .is-clean'))
 
 document.querySelectorAll('.is-in-facility, .is-clean').forEach(checkbox => {
     checkbox.addEventListener('change', function() {
         const cardFlip = this.nextElementSibling;
+        console.log('cardFlip', cardFlip)
         cardFlip.style.transition = 'transform 0.6s';
         if (this.checked) {
             cardFlip.style.transform = 'rotateY(180deg)';
