@@ -14,11 +14,11 @@
         <p class="subtitle">Hier zijn de deelnemers bij uw locatie: {{ employee.location.name }}</p>
         
         <!-- Button to add participant -->
-        {% if employee.can_manage_participants %}
-        <div>
-            <a href="{% url 'participants:add_participant' %}" class="button is-primary">Deelnemer Toevoegen</a>
-        </div>
-        {% endif %}
+{% if employee.can_manage_participants %}
+<div>
+    <a href="{% url 'participants:add_participant' %}" class="button is-primary" id="add-participant-button" onclick="checkParticipantLimit(event)">Deelnemer Toevoegen</a>
+</div>
+{% endif %}
 
         <!-- <pre>
         {% for bag in unwashed_bags %}
@@ -56,6 +56,13 @@
 
 
         <!-- Active Participants -->
+        <ul>
+            {% if messages %}
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+            {% endif%}
+        </ul>
         <div class="participants-grid">
             {% for data in participant_data %}
                 {% if data.participant.is_active %}
@@ -83,7 +90,9 @@
                 {% if not data.participant.is_active %}
                     <li>
                         {{ data.participant.full_name }} - <span style="color:gray;">Inactief</span>
+                        <a href="{% url 'participants:reactivate_participant' data.participant.id %}" class="button is-small is-info" >Reactivatie </a>
                     </li>
+
                 {% endif %}
             {% endfor %}
         </ul>

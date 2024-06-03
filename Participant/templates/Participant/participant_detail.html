@@ -14,7 +14,13 @@
                        Deelnemer: {{ participant.full_name }}
                     </p>
                     </div>
-                    
+                    {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                     
                 
             </header>
@@ -25,8 +31,9 @@
                 </div>
                 {% if employee.can_manage_participants %}
                 <button class="button btn-warning"
-                    onclick="return confirm('Weet u zeker dat u deze deelnemer wilt verwijderen?') && confirm('Deze actie kan niet ongedaan worden gemaakt. Wilt u doorgaan?');"
-                    style="padding:0.5rem 1rem;">  
+                    onclick="deleteParticipant('{{ participant.id }}')"
+                    style="padding:0.5rem 1rem;">          
+                    
                 <span class="icon is-small">
                     <i class="fas fa-trash"></i>
                 </span>
@@ -187,7 +194,16 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
-$(document).ready(function() {
+    function deleteParticipant(participantId){
+        console.log("clicked")
+        if (confirm('Weet u zeker dat u deze deelnemer wilt verwijderen?') && confirm('Deze actie kan niet ongedaan worden gemaakt. Wilt u doorgaan?')){
+            const url = `{% url 'participants:remove_participant' 0 %}`.replace('0', participantId);
+            window.location.href= url;
+        } else {
+            alert("Verwijderen mislukt:" + response.message);
+        }
+    }
+    $(document).ready(function() {
     $('.button-wrapper').click(function(){
         // change the checked status of the current checkbox
         const form = $(this).siblings().first().get(0)
@@ -251,7 +267,7 @@ $(document).ready(function() {
         });
     });
 
-    // Wash now button
+    //wash now knop
     $('.wash-now-button').click(function() {
         var bagId = $(this).data('bag-id');
         var ajaxUrl = `{% url 'bags:wash_now' 0 %}`.replace('0', bagId);
@@ -266,7 +282,7 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success) {
                     alert('Wassen Succesvol!: ' + response.message);
-                    location.reload(); // Refresh the page to reflect changes
+                    location.reload(); //refresh the page to reflect changes
                 } else {
                     alert('Wassen mislukt: ' + response.message);
                 }

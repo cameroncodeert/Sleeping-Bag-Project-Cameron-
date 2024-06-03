@@ -14,8 +14,7 @@ from django.http import HttpResponseRedirect
 # from Notes.views import NoteForm
 from Notes.forms import NoteFormHiddenParticipant as NoteForm
 from SleepingBag.forms import SleepingBagsForm, SleepingBagsCustomForm 
-
-
+from urllib.parse import urlencode
 
 @login_required
 def dashboard_view(request):
@@ -101,9 +100,13 @@ def add_participant(request):
     )
     if request.method == 'POST':
         form = ParticipantForm2(request.POST, employee_location=employee_location)
-        print("form", form)
+        
+        # Check if the location already has 7 participants
+        if Participant.objects.filter(registered_location=employee_location).count() >= 7:
+            messages.error(request, f"Maximaal aantal deelnemers (7) bereikt voor {employee_location.name}.")
+            return redirect('landing_page')
+
         if form.is_valid():
-            print('is valide')
             participant = form.save()
             # participant.is_active = True
 
@@ -148,17 +151,53 @@ def add_participant(request):
 
 @login_required
 def remove_participant(request, participant_id):
-    if not request.user.employee.can_manage_participants:
+    employee = Employee.objects.get(user=request.user)
+    if not employee.can_manage_participants:
         return redirect('landing_page')
 
     participant = get_object_or_404(Participant, id=participant_id)
-    
-    # When a user is deleted --> it resets their sleepingbags. 
-    SleepingBags.objects.filter(linked_participant=participant).update(linked_participant=None, is_in_facility=True)
-    
     participant.is_active = False  # Now mark the participant as inactive
     participant.save()
-    
+    bags = SleepingBags.objects.filter(linked_participant=participant, is_in_facility=False)
+    for bag in bags:
+        bag.status = 'Lost'
+        bag.save()
     return redirect('landing_page')
+    
+    # When a user is deleted --> it resets their sleepingbags. 
+    # SleepingBags.objects.filter(linked_participant=participant).update(linked_participant=None, is_in_facility=True)
+    
+    
+# @login_required
+# def reactive_paticipanat(request, participant_id):
+#     employee = Employee.objects.get(user=request.user)
+#     if not employee.can_manage_participants:
+#         return redirect('landing_page')
 
+#     participant = get_object_or_404(Participant, id=participant_id)
+#     participant.is_active = False  # Now mark the participant as inactive
+#     participant.save()
+#     bags = SleepingBags.objects.filter(linked_participant=participant, is_in_facility=False)
+#     for bag in bags:
+#         bag.status = 'Lost'
+#         bag.save()
+#     return redirect('landing_page')
 
+@login_required
+def reactivate_participant(request, participant_id):
+    employee = Employee.objects.get(user=request.user)
+    if not employee.can_manage_participants:
+        return redirect('landing_page')
+
+    participant = get_object_or_404(Participant, id=participant_id)
+    num_participant_active = Participant.objects.filter(registered_location=employee.location, is_active=True).count()
+    if num_participant_active >=7:
+        messages.error(request, "This location is at capacity at the moment")
+        return redirect('landing_page')
+    participant.is_active = True
+    participant.save()
+
+    url = reverse('participants:participant_details', args=[participant_id])
+   
+    messages.success(request, 'Deelnemer is succesvol geactiveerd!')
+    return redirect(url)

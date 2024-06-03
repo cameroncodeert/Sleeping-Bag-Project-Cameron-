@@ -324,3 +324,7 @@ li {
 .user-icon {
     font-size: 3em; 
 }
+.error{
+    color:red !important;
+    font-weight: 900;
+}

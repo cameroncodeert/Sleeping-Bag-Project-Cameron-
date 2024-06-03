@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from Location.models import Location
+
 # Create your models here.
 class Participant(models.Model):
     DOCUMENT_TYPES = [
@@ -42,6 +43,14 @@ class Participant(models.Model):
         return self.first_name + " " + self.last_name
 
     def save(self, *args, **kwargs):
+        # are we creating a new participant or are we updating participant
+        # if self.pk and not self.is_active:
+        #     bags = SleepingBags.objects.filter(linked_participant=self, is_in_facility=False)
+        #     bags.status = 'Lost'
+        #     bags.save()
+        #     bags.status = 'lost'
+
+
         if self.document_type=='other' and self.custom_document_type == None:
             raise ValidationError('A custom document need to be added since it is a document of type other')
         super(Participant, self).save(*args, **kwargs)
