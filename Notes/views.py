@@ -52,7 +52,7 @@ def manage_note(request):
     #new_notes= Note.objects.exclude(participant__is_null)True)
     form = NoteForm()
     context = {"new_notes": display_notes, 'form':form}
-    return render(request, "Notes/index.html", context)
+    return render(request, "index.html", context)
 
 
         # Return an 'invalid login' error message.

@@ -48,7 +48,6 @@ Create two templates one for registration one for the landing page.
 - check if the delete button
 
 ## TODO
-- [x] we need add the possibility for a member to make a particiapnt unactive or active and ask if the lost sleeeping bag should become good again
 - [x]  add a validation to only allow max 7 active participants by location (with some caveats)
 - [x] what happens when a participant become unactive
     - sleeping bags with the participant becomes lost
@@ -57,4 +56,14 @@ Create two templates one for registration one for the landing page.
     - sleeping bags with the participant becomes good
     - sleeping bags in the facility stay with the same status 
 - a page where members can manage sleeping bags at the facility level
+- change the template folder for landing page, and register page
+- profile page
+- I forgot my password... page
+- create your own user model or not
+- a little bit of styling
+- REFACTORING
+- potentially put it on the web (PAAS (platform as a service))
+- Quality Assurance
+
+
 

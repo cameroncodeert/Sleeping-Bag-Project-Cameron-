@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
 <body>
-    {% include "Notes/header.html" %}
+    {% include "header.html" %}
     <section class="section">
         <div class="container">
-            <h1 class="title">Notes</h1>
-            <h2 class="subtitle">Add a New Note</h2>
+            <h1 class="title is-4">Hier kunt u notities maken</h1> 
+            <h2 class="subtitle">Maak een nieuwe notitie</h2>
             <form method="post" action="{% url 'notes:add' %}">
                 {% csrf_token %}
                 {{form}}
@@ -34,7 +34,7 @@
             {% get_current_timezone as TIME_ZONE %}
             {% now "Y-m-d" as today_date %}
             
-            <h2 class="subtitle">Notities vandaag gemaakt:</h2>
+            <h2 class="subtitle"> Vandaag gemaakte notities:</h2>
             
             <div class="content notes">
                 <ul>

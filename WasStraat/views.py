@@ -33,7 +33,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 @login_required
 def landing_page(request):
-    return render(request, 'Notes/landing_page.html')
+    return render(request, 'landing_page.html')
 
 def login_user(request):
     if request.method=='POST':
@@ -44,10 +44,10 @@ def login_user(request):
         if user is not None:
             login(request, user)
         if User.objects.filter(username=username, is_active=False):
-            return render(request, "Notes/login.html", context={"errors": "You are not yet activated"})
+            return render(request, "login.html", context={"errors": "You are not yet activated"})
         return redirect('/')
     else:
-        return render(request, "Notes/login.html")
+        return render(request, "login.html")
 
 from Participant.models import Participant
 from Participant.forms import ParticipantForm
@@ -69,7 +69,7 @@ def register_user(request):
             return redirect('landing_page')
 
         else:
-            return render(request, "Notes/register.html", {
+            return render(request, "register.html", {
                 "user_form": user_form,
                 "employee_form": employee_form,
                 "errors": {**user_form.errors,  **employee_form.errors}
@@ -79,7 +79,7 @@ def register_user(request):
         user_form = CustomUserCreationForm()
         employee_form = EmployeeForm()
 
-    return render(request, "Notes/register.html", {
+    return render(request, "register.html", {
         "user_form": user_form,
         "employee_form": employee_form
     })

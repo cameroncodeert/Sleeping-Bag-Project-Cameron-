@@ -1,10 +1,17 @@
-{% extends 'Notes/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% block body %}
-{% include "Notes/header.html" %}
+{% include "header.html" %}
 
 <div class="columns">
     <!-- Cliënt Contact Info -->
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
     <div class="column is-one-third">
         <div class="card">
             <header class="card-header">
@@ -14,13 +21,6 @@
                        Deelnemer: {{ participant.full_name }}
                     </p>
                     </div>
-                    {% if messages %}
-                        <ul>
-                            {% for message in messages %}
-                                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
                     
                 
             </header>
@@ -92,25 +92,9 @@
                     <a href="javascript:void(0);" class="btn btn-primary swap-button" data-participant-id="{{ participant.id }}">
                         <button class="button is-link">Slaapzakken omruilen</button></a>
                 </div>
-                
-                <!-- <a href="{% url 'bags:swap_bag' participant.id %}"
-                 class="btn btn-primary" >
-                    <button class="button is-link">Slaapzakken omruilen</button></a> -->
-                
-                <!-- Swap Button, rendered conditionnaly if we have two sleeping bags, one sleeping is dirty and the other one is clean and in the facility -->
-                <!-- {% with bag_1=bags_forms_ext.0%}
-                 <p>{{bags_forms_ext.0.0.is_washed}}</p> -->
-                <!-- <h1>Hello world {{bag_1.last_washing_cycle}}</h1>
-                {%endwith%}
-                {% if bags_forms_ext.0.0.is_washed and bags_forms_ext.0.0.is_in_facility and not bags_forms_ext.1.0.is_washed %}  -->
-                <!-- {%endif%} -->
             </div>
         </div>
     </div>
- 
-                            <!-- Report Lost Button
-                            <a href="javascript:void(0);" class="btn btn-danger report-lost-button" data-bag-id="{{ bag.id }}">Verloren melden</a> -->
-
 <!-- Notities -->
 <div class="column is-full">
     <div class="card">
@@ -122,18 +106,8 @@
         <div class="card-content">
             <div class="content">
                 <form method="post" action="{% url 'notes:add' %}">
-                    <!-- <input type="hidden" name="next" value="{{ request.path }}"> -->
                     {% csrf_token %}
                     {{note_form.as_p}}
-                    <!-- <div class="field">
-                        <label class="label">Note</label>
-                        <div class="control">
-                            <textarea name="note" rows="4" class="textarea">{{ form.note.value }}</textarea>
-                        </div>
-                    </div>
-                    <div class="field">
-                        {{ form.participant.as_hidden }}
-                    </div> -->
                     <div class="control">
                         <button class="button is-link" type="submit">Submit</button>
                     </div>
@@ -185,7 +159,7 @@
 </div>
 
 
-<!-- terug naar deelnemers knop -->
+<!-- de terug naar deelnemers knop -->
 <div class="section">
     <div class="container">
         <a href="{% url 'landing_page' %}" class="return-button">Terug naar alle deelnemers</a>
@@ -233,7 +207,6 @@
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
-                    // alert('Ruilen Succesvol!: ' + response.message);
                     window.location.reload()
                 } else {
                     alert('Ruilen mislukt: ' + response.message);
@@ -282,7 +255,7 @@
             success: function(response) {
                 if (response.success) {
                     alert('Wassen Succesvol!: ' + response.message);
-                    location.reload(); //refresh the page to reflect changes
+                    location.reload(); //r efresh the page to reflect changes
                 } else {
                     alert('Wassen mislukt: ' + response.message);
                 }
@@ -311,24 +284,3 @@ document.querySelectorAll('.is-in-facility, .is-clean').forEach(checkbox => {
 </script>
 {% endblock %}
 
-<!-- 
-$('.return-dirty-button').click(function() {
-    var participantId = $(this).data('participant-id');
-    var ajaxUrl = `{% url 'return_dirty_bag' 0 %}`.replace('0', participantId);
-
-    $.ajax({
-        url: ajaxUrl,
-        type: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                alert('Terugbrengen Succesvol!: ' + response.message);
-            } else {
-                alert('Terugbrengen mislukt: ' + response.message);
-            }
-        },
-        error: function(xhr, status, error) {
-            alert('Technical error: ' + error);
-        }
-    });
-}); -->

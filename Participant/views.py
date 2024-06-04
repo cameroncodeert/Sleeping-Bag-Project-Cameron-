@@ -47,7 +47,7 @@ def dashboard_view(request):
         'participant_data': participant_data,
         'unwashed_bags': unwashed_bags  
     }
-    return render(request, 'Notes/landing_page.html', context)
+    return render(request, 'landing_page.html', context)
 
 @login_required
 def participant_detail(request, id):
@@ -83,7 +83,7 @@ def participant_detail(request, id):
     if bags_forms:
         context['my_form'] = bags_forms[0]
 
-    return render(request, 'Participant/participant_detail.html', context)
+    return render(request, 'participant_detail.html', context)
 
 
 from .forms import ParticipantForm2

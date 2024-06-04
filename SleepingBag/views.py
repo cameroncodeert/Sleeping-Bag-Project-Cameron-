@@ -120,3 +120,5 @@ def stock(request, location_id):
         'available_bags': available_bags,
     }
     return render(request, 'SleepingBag/stock.html', context)
+
+

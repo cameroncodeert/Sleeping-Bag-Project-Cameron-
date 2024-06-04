@@ -14,7 +14,9 @@
 
 .navbar {
     background-color: #ffffff;
-    border-bottom: 2px solid #d6d6d6;
+    border-bottom: 20px solid #000000;
+    display: flex; 
+    align-items: center; 
 }
 
 .navbar-item {
@@ -24,11 +26,19 @@
 
 .navbar-item img {
     margin-right: 10px;
+    width: 450px;
+    height: auto; 
+}
+.navbar-brand img {
+    max-width: 100%;
+    height: auto;
+    width: 150px;  
 }
 
+
 .navbar-item:hover {
-    background-color: #f0f0f0;
-    color: #000000;
+    background-color: #eeeeee;
+    color: #767676;
 }
 
 .navbar-burger {
@@ -47,8 +57,8 @@
 
 h1, h2, h3 {
     color: rgb(73, 73, 73);
-    font-size: 2em; 
-    margin-bottom: 20px; 
+    font-size: 1.7em; 
+    margin-bottom: 25px; 
 }
 
 body {
@@ -58,6 +68,8 @@ body {
     width: 100%;
     max-width: 100%;  
     overflow-x: hidden;  
+    line-height: 1.6;
+    
 }
 
 /* Note styling */
@@ -89,7 +101,7 @@ body {
     padding: 20px;
     border: 1px solid #919191;
     border-radius: var(--border-radius);
-    background-color: #efebeb;
+    background-color: #f9f9f9;
     box-shadow: var(--box-shadow);
     transition: transform 0.2s, box-shadow 0.2s;
     color: var(--text-color);
@@ -144,12 +156,39 @@ body {
 }
 
 
-
-
-.inactive-list li {
-    color: #999; 
+.button.is-small.is-info:hover {
+    background-color: #275a8f;
 }
 
+
+.inactive-list {
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+}
+.inactive-list li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+.inactive-list .button {
+    margin-left: 20px;
+}
+
+.inactive-bag {
+    color: gray;
+    text-decoration: line-through;
+}
+
+.inactive-bag button {
+    cursor: not-allowed;
+    background-color: #ccc;
+    border-color: #ccc;
+}
 
 a {
     color: inherit;
@@ -235,9 +274,12 @@ li {
 
 .participant-card {
     background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    margin: 10px;
+    padding: 30px;
+    border-radius: 15px;
+    background: linear-gradient(to bottom, #f9f9f9, #e0e0e0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
     width: 300px; 
     color: inherit; 
 }
@@ -260,16 +302,6 @@ li {
     background-color: #363636; 
 }
 
-.inactive-bag {
-    color: gray;
-    text-decoration: line-through;
-}
-
-.inactive-bag button {
-    cursor: not-allowed;
-    background-color: #ccc;
-    border-color: #ccc;
-}
 
 .bag-id {
     font-size: 1.2em;     
@@ -323,8 +355,11 @@ li {
 /* end of style for participant details page */
 .user-icon {
     font-size: 3em; 
+    padding: 40px;
+
 }
 .error{
     color:red !important;
     font-weight: 900;
 }
+

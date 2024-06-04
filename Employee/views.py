@@ -44,14 +44,14 @@ def dashboard_view(request):
         'employee': employee,
         'participant_data': participant_data
     }
-    return render(request, 'Notes/landing_page.html', context)
+    return render(request, 'landing_page.html', context)
 
 @login_required
 def participant_detail(request, id):
     participant = get_object_or_404(Participant, pk=id)
     sleeping_bags = SleepingBags.objects.filter(linked_participant=participant)
 
-    return render(request, 'Notes/participant_detail.html', {
+    return render(request, 'participant_detail.html', {
         'participant': participant,
         'sleeping_bags': sleeping_bags
     })
