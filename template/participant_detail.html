@@ -170,7 +170,7 @@
 <script>
     function deleteParticipant(participantId){
         console.log("clicked")
-        if (confirm('Weet u zeker dat u deze deelnemer wilt verwijderen?') && confirm('Deze actie kan niet ongedaan worden gemaakt. Wilt u doorgaan?')){
+        if (confirm('Weet u zeker dat u deze deelnemer wilt verwijderen?') && confirm('Deze actie zorgt ervoor dat deze deelnemer als Inactief word gemarkeert.  Wilt u doorgaan?')){
             const url = `{% url 'participants:remove_participant' 0 %}`.replace('0', participantId);
             window.location.href= url;
         } else {

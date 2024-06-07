@@ -56,9 +56,13 @@
 }
 
 h1, h2, h3 {
-    color: rgb(73, 73, 73);
+    color: rgb(0, 0, 0);
     font-size: 1.7em; 
     margin-bottom: 25px; 
+}
+
+h1.title {
+    color: #0026ff;
 }
 
 body {

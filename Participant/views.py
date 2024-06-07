@@ -8,7 +8,6 @@ from Employee.models import Employee
 from django.contrib.auth.models import User
 from Location.models import Location
 from Notes.models import Note
-from django.forms import ModelForm
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 # from Notes.views import NoteForm

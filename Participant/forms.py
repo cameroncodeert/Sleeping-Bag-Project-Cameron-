@@ -19,7 +19,17 @@ class ParticipantForm2(forms.ModelForm):
     class Meta:
         model = Participant
         fields = ["first_name", "last_name", "registered_location", "date_of_birth", "document_type", "document_date", "custom_document_type"]
-    
+        labels = {
+        'first_name': 'Voornaam',
+        'last_name': 'Achternaam',
+        'registered_location': 'Geregistreerde Locatie',
+        'date_of_birth': 'Geboortedatum',
+        'document_type': 'Type Document',
+        'custom_document_type': 'Overig Document Type',
+        'document_date': 'Document Datum van Afgifte',
+        'sleeping_bag_1': 'Slaapzak 1',
+        'sleeping_bag_2': 'Slaapzak 2'
+    }
     def clean(self):
         cleaned_data = super().clean()
         print('cleaned data', cleaned_data)
@@ -89,7 +99,7 @@ class ParticipantForm(forms.ModelForm):
         label="Geboortedatum"
         )
     document_type = forms.ChoiceField(choices=DOCUMENT_TYPES, label="Type Document") 
-    custom_document_type = forms.CharField(required=False, label="Ander Document Type", widget=forms.TextInput(attrs={'class': 'input'}))  
+    _document_type = forms.CharField(required=False, label="Ander Document Type", widget=forms.TextInput(attrs={'class': 'input'}))  
     document_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}), label="Datum van het Document")  
 
 
